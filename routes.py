@@ -3,10 +3,14 @@ from rdflib import Graph, RDF, RDFS, Literal, URIRef, XSD, OWL, BNode
 
 app = Flask(__name__)
 
+'''
+REFS:
+    Memento spec: https://tools.ietf.org/rfc/rfc7089
+'''
+
 
 @app.route('/')
 def home():
-
     html = '''<!DOCTYPE html>
 <html lang="en">
   <head>
