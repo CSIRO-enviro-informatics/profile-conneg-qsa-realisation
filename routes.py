@@ -8,6 +8,13 @@ REFS:
     Memento spec: https://tools.ietf.org/rfc/rfc7089
 '''
 
+# TODO: support CURIE advertising & compare to OAI-PMH
+'''One option is to use CURIE syntax prefix:token in which case this would be sematically equivalent to the full URI form. This would require the server implementation to be willing to advertise prefixes it understands, or clients to specify prefix assumptions and to match either full URI or CURIE forms.'''
+
+# TODO: register of registers
+# TODO: 3x register
+# TODO: 3x instance accessors
+
 
 @app.route('/')
 def home():
@@ -32,6 +39,8 @@ def home():
 </html>'''.format(
         title='Profile Conneg QSA Demonstrator'
     )
+    # TODO: add about info here
+    # TODO: add implemented instance info here
 
     return Response(html)
 
