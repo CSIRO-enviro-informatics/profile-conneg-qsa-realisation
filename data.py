@@ -277,7 +277,7 @@ def get_profile_for_resource(resource_uri, profile_id):
         if len(profiles) == 1:
             return profiles[0]
         else:
-            # TODO: find profile by qname
+            # TODO: find profile by CURIE
             if profile_id.startswith('http'):
                 # Profile indicated by URI
                 return [x for x in profiles if x.get('uri') == profile_id][0]
