@@ -1,0 +1,17 @@
+@prefix dcat:   <http://www.w3.org/ns/dcat#> .
+@prefix dct:    <http://purl.org/dc/terms/> .
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+@prefix eg:     <http://example.com/eg/> .
+
+<{{ BASE_URI }}/catalogue> a dcat:Catalogue ;
+    dct:title "Dummy Catalogue" ;
+    dct:description "A Dummy Catalogue cataloguing all the other things (papers & licenses) used in this demo API." ;
+    dct:issued "2018-10-15"^^xsd:date ;
+    dct:modified "2018-10-17"^^xsd:date ;
+    dct:publisher eg:csiro ;
+    dct:license <{{ BASE_URI }}/license/1> ;
+    dct:hasPart <{{ BASE_URI }}/paper/1> ;
+    dct:hasPart <{{ BASE_URI }}/paper/2> ;
+    dct:hasPart <{{ BASE_URI }}/paper/3> ;
+    dct:hasPart <{{ BASE_URI }}/license/1> ;
+.

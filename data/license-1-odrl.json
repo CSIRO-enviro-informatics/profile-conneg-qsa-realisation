@@ -1,0 +1,65 @@
+{
+  "@context": {
+    "adms": "http://www.w3.org/ns/adms#",
+    "cc": "http://creativecommons.org/ns#",
+    "dct": "http://purl.org/dc/terms/",
+    "dcterms": "http://purl.org/dc/terms/",
+    "foaf": "http://xmlns.com/foaf/0.1/",
+    "odrl": "http://www.w3.org/ns/odrl/2/",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  },
+  "@graph": [
+    {
+      "@id": "{{ BASE_URI }}/licence/1",
+      "@type": [
+        "odrl:Policy",
+        "cc:License"
+      ],
+      "adms:status": {
+        "@id": "http://dd.eionet.europa.eu/vocabulary/datadictionary/status/submitted"
+      },
+      "dcterms:created": {
+        "@type": "xsd:date",
+        "@value": "2018-10-10"
+      },
+      "dcterms:creator": {
+        "@id": "https://creativecommons.org"
+      },
+      "dcterms:language": {
+        "@id": "http://www.lexvo.org/page/iso639-3/eng"
+      },
+      "odrl:permission": {
+        "@id": "_:ub370bL20C21"
+      },
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "A work with this licence is free of known restrictions under copyright law, including all related and neighbouring rights. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission."
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "License 1"
+      },
+      "rdfs:seeAlso": {
+        "@id": "https://creativecommons.org/publicdomain/mark/1.0/"
+      }
+    },
+    {
+      "@id": "_:ub370bL20C21",
+      "@type": "odrl:Permission",
+      "odrl:action": [
+        {
+          "@id": "cc:Reproduction"
+        },
+        {
+          "@id": "odrl:derive"
+        },
+        {
+          "@id": "cc:Distribution"
+        }
+      ]
+    }
+  ]
+}

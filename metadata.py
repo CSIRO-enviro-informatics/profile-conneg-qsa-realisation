@@ -170,17 +170,17 @@ METADATA = {
                             'uri': 'http://w3id.org/mediatype/text/html',
                             'token': 'text/html',
                             'default': True,
-                            'file': 'catalogue-reg.html'
+                            'file': 'catalogue-dcat.html'
                         },
                         {
                             'uri': 'http://w3id.org/mediatype/text/turtle',
                             'token': 'text/turtle',
-                            'file': 'catalogue-reg.ttl'
+                            'file': 'catalogue-dcat.ttl'
                         },
                         {
                             'uri': 'http://w3id.org/mediatype/application/ld+json',
                             'token': 'application/ld+json',
-                            'file': 'catalogue-reg.json'
+                            'file': 'catalogue-dcat.json'
                         },
                     ]
                 },
@@ -192,12 +192,12 @@ METADATA = {
                             'uri': 'http://w3id.org/mediatype/text/html',
                             'token': 'text/html',
                             'default': True,
-                            'file': 'catalogue-aureg.html'
+                            'file': 'catalogue-reg.html'
                         },
                         {
                             'uri': 'http://w3id.org/mediatype/text/turtle',
                             'token': 'text/turtle',
-                            'file': 'catalogue-aureg.ttl'
+                            'file': 'catalogue-reg.ttl'
                         },
                         {
                             'uri': 'http://w3id.org/mediatype/application/ld+json',
@@ -583,7 +583,7 @@ def test_get_mediatype_for_response_profile():
     assert expected == get_mediatype_for_response_profile(BASE_URI + '/paper/3', profile_id='epub', mediatype_id='text/turtle')
 
     got = get_mediatype_for_response_profile(BASE_URI + '/catalogue', mediatype_id='application/ld+json').get('file')
-    assert 'catalogue-reg.json' == got
+    assert 'catalogue-dcat.json' == got
 
 
 def test_all():

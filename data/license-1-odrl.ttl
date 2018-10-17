@@ -1,0 +1,24 @@
+@prefix adms: <http://www.w3.org/ns/adms#> .
+@prefix cc: <http://creativecommons.org/ns#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix odrl: <http://www.w3.org/ns/odrl/2/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<{{ BASE_URI }}/licence/1> a cc:License,
+        odrl:Policy ;
+    rdfs:label "License 1"@en ;
+    dct:created "2018-10-10"^^xsd:date ;
+    dct:creator <https://creativecommons.org> ;
+    dct:language <http://www.lexvo.org/page/iso639-3/eng> ;
+    rdfs:comment "A work with this licence is free of known restrictions under copyright law, including all related and neighbouring rights. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission."@en ;
+    rdfs:seeAlso <https://creativecommons.org/publicdomain/mark/1.0/> ;
+    adms:status <http://dd.eionet.europa.eu/vocabulary/datadictionary/status/submitted> ;
+    odrl:permission [ a odrl:Permission ;
+            odrl:action cc:Distribution,
+                cc:Reproduction,
+                odrl:derive ] .

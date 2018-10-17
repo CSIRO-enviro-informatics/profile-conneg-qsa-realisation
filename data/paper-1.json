@@ -1,0 +1,41 @@
+{
+  "@context": {
+    "dcap": "http://linked.data.gov.au/dataset/CSIRO-ePub-DCAP/constraints-dcap-syntax.txt#",
+    "dcmitype": "http://purl.org/dc/dcmitype/",
+    "dct": "http://purl.org/dc/terms/",
+    "dcterms": "http://purl.org/dc/terms/",
+    "eg": "http://example.com/eg/",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  },
+  "@id": "{{ BASE_URI }}/paper/1",
+  "@type": "dcmitype:Text",
+  "dcterms:abstract": "Many attempts have been made to enhance irrigation decisions using Decision Support Systems (DSS). These have met with limited success for many reasons, one of which is well known: that DSS encode decision rules (waterbalances, financial models) narrower in scope than the criteria farmers really use to make decisions, thus their advice is of limited value or perhaps entirely irrelevant.\n\nTo assist irrigation DSS designers build more flexible systems, we suggest they heed decision theory and decision modelling, separately from domain-specific DSS tasks. They may then find better ways of modelling real-world decisions which might allow for wider ranging sets of decision rules than previously.\nTo facilitate this, we review three different decision modelling systems and with each model the seemingly straightforward irrigation decision \"How much should I water today?\". In doing this we show how they can assist with wide-ranging rule integration. The systems we chose are: Decision Modelling Notation (DMN) from the business analysis community; the Decision Ontology (DO), a Semantic Web modelling system; and Decision Modelling Ontology (DMO) a formal ontology from Information Systems Engineering.\n\nWe have determined that each of these modelling systems have useful aspects for irrigation DSS designers, which we list, but that they are not equally useful. Also, none of the systems provide designers with both the best modelling system and best technology & tools. We complete our work with a list of requirements for a future decision modelling system based on the intersection of the strengths of the systems investigated and our perceptions of irrigation DSS need. We believe a future system is possible to make and could serve irrigation DSS designers better than any current system.\nIn future work, we indicate what steps might be taken with existing systems to evolve them in line with our future system requirements. Finally, we conclude with a summary of our findings.",
+  "dcterms:created": {
+    "@type": "xsd:gYear",
+    "@value": "2017"
+  },
+  "dcterms:creator": {
+    "@id": "eg:car"
+  },
+  "dcterms:dateAccepted": {
+    "@type": "xsd:date",
+    "@value": "2018-07-19"
+  },
+  "dcterms:publisher": {
+    "@id": "eg:compag"
+  },
+  "dcterms:subject": [
+    {
+      "@id": "http://id.loc.gov/authorities/subjects/sh85036200"
+    },
+    {
+      "@id": "http://id.loc.gov/authorities/subjects/sh2018001881"
+    },
+    {
+      "@id": "http://id.loc.gov/authorities/subjects/sh85068283"
+    }
+  ],
+  "dcterms:title": "Using decision models to enable better irrigation Decision Support Systems"
+}

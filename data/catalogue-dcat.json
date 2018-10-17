@@ -1,0 +1,43 @@
+{
+  "@context": {
+    "dcat": "http://www.w3.org/ns/dcat#",
+    "dct": "http://purl.org/dc/terms/",
+    "dcterms": "http://purl.org/dc/terms/",
+    "eg": "http://example.com/eg/",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  },
+  "@id": "{{ BASE_URI }}/catalogue",
+  "@type": "dcat:Catalogue",
+  "dcterms:description": "A Dummy Catalogue cataloguing all the other things (papers & licenses) used in this demo API.",
+  "dcterms:hasPart": [
+    {
+      "@id": "{{ BASE_URI }}/paper/3"
+    },
+    {
+      "@id": "{{ BASE_URI }}/paper/2"
+    },
+    {
+      "@id": "{{ BASE_URI }}/license/1"
+    },
+    {
+      "@id": "{{ BASE_URI }}/paper/1"
+    }
+  ],
+  "dcterms:issued": {
+    "@type": "xsd:date",
+    "@value": "2018-10-15"
+  },
+  "dcterms:license": {
+    "@id": "{{ BASE_URI }}/license/1"
+  },
+  "dcterms:modified": {
+    "@type": "xsd:date",
+    "@value": "2018-10-17"
+  },
+  "dcterms:publisher": {
+    "@id": "eg:csiro"
+  },
+  "dcterms:title": "Dummy Catalogue"
+}

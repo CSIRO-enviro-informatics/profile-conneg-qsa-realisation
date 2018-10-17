@@ -1,0 +1,54 @@
+{
+  "@context": {
+    "dct": "http://purl.org/dc/terms/",
+    "dcterms": "http://purl.org/dc/terms/",
+    "eg": "http://example.com/eg/",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "reg": "http://purl.org/linked-data/registry#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  },
+  "@graph": [
+    {
+      "@id": "{{ BASE_URI }}/license/1",
+      "@type": "reg:RegisterItem",
+      "reg:register": {
+        "@id": "{{ BASE_URI }}/catalogue"
+      }
+    },
+    {
+      "@id": "{{ BASE_URI }}/paper/1",
+      "@type": "reg:RegisterItem",
+      "reg:register": {
+        "@id": "{{ BASE_URI }}/catalogue"
+      }
+    },
+    {
+      "@id": "{{ BASE_URI }}/catalogue",
+      "@type": "reg:Register",
+      "dcterms:description": "A Dummy Catalogue cataloguing all the other things (papers & licenses) used in this demo API.",
+      "dcterms:modified": {
+        "@type": "xsd:date",
+        "@value": "2018-10-17"
+      },
+      "dcterms:title": "Dummy Catalogue",
+      "reg:owner": {
+        "@id": "eg:csiro"
+      }
+    },
+    {
+      "@id": "{{ BASE_URI }}/paper/3",
+      "@type": "reg:RegisterItem",
+      "reg:register": {
+        "@id": "{{ BASE_URI }}/catalogue"
+      }
+    },
+    {
+      "@id": "{{ BASE_URI }}/paper/2",
+      "@type": "reg:RegisterItem",
+      "reg:register": {
+        "@id": "{{ BASE_URI }}/catalogue"
+      }
+    }
+  ]
+}
