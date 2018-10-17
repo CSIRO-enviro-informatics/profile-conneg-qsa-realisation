@@ -1,6 +1,9 @@
+import os
 from flask import Flask, Blueprint, render_template, request, redirect, url_for, abort, jsonify, Response
 from rdflib import Graph, RDF, RDFS, Literal, URIRef, XSD, OWL, BNode
+import metadata
 
+APP_DIR = os.path.dirname(os.path.realpath(__file__))
 app = Flask(__name__)
 
 '''
@@ -45,6 +48,36 @@ def home():
     # TODO: add implemented instance info here
 
     return Response(html)
+
+
+@app.route('/catalogue')
+def catalogue():
+    uri = metadata.BASE_URI + request.path
+    return open(os.path.join(
+        APP_DIR,
+        'data',
+        metadata.get_mediatype_for_response_profile(uri).get('file')
+    ), 'r').read().replace('{{ BASE_URI }}', metadata.BASE_URI)
+
+
+@app.route('/paper/<string:id>')
+def paper(id):
+    uri = metadata.BASE_URI + request.path
+    return open(os.path.join(
+        APP_DIR,
+        'data',
+        metadata.get_mediatype_for_response_profile(uri).get('file')
+    ), 'r').read().replace('{{ BASE_URI }}', metadata.BASE_URI)
+
+
+@app.route('/license/<string:id>')
+def license(id):
+    uri = metadata.BASE_URI + request.path
+    return open(os.path.join(
+        APP_DIR,
+        'data',
+        metadata.get_mediatype_for_response_profile(uri).get('file')
+    ), 'r').read().replace('{{ BASE_URI }}', metadata.BASE_URI)
 
 
 if __name__ == '__main__':

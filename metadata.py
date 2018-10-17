@@ -323,9 +323,6 @@ def list_profiles_for_resource(resource_uri, return_only_uris=False):
     # get the resource
     resource = get_resource_profconneg_options(resource_uri)
 
-    # no profiles listed
-
-
     if return_only_uris:
         return [x.get('uri') for x in resource['profiles']]
     else:
@@ -563,14 +560,15 @@ def test_list_mediatypes_for_resource_profile():
 
 def get_mediatype_for_response_profile(resource_uri, profile_id=None, mediatype_id=None):
     profile = get_profile_for_resource(resource_uri, profile_id)
-    if mediatype_id.startswith('http'):
-        mediatype = [x for x in profile['mediatypes'] if x.get('uri') == mediatype_id][0]
-    else:
-        mediatype = [x for x in profile['mediatypes'] if x.get('token') == mediatype_id][0]
 
-    if mediatype is None:
-        return profile[0]  # TODO: replace first with default
+    if mediatype_id is None:
+        return profile['mediatypes'][0]  # TODO: replace first with default
     else:
+        if mediatype_id.startswith('http'):
+            mediatype = [x for x in profile['mediatypes'] if x.get('uri') == mediatype_id][0]
+        else:
+            mediatype = [x for x in profile['mediatypes'] if x.get('token') == mediatype_id][0]
+
         return mediatype
 
 
@@ -587,16 +585,16 @@ def test_get_mediatype_for_response_profile():
 
 
 def test_all():
-    # test_list_resource()
-    # print('completed test_list_resource()')
-    # test_get_resource_profconneg_options()
-    # print('completed test_get_resource_profconneg_options()')
-    # test_list_profiles_for_resource()
-    # print('completed test_list_profiles_for_resource()')
-    # test_get_profile_for_resource()
-    # print('completed test_get_profile_for_resource()')
-    # test_list_mediatypes_for_resource_profile()
-    # print('completed test_list_mediatypes_for_resource_profile()')
+    test_list_resource()
+    print('completed test_list_resource()')
+    test_get_resource_profconneg_options()
+    print('completed test_get_resource_profconneg_options()')
+    test_list_profiles_for_resource()
+    print('completed test_list_profiles_for_resource()')
+    test_get_profile_for_resource()
+    print('completed test_get_profile_for_resource()')
+    test_list_mediatypes_for_resource_profile()
+    print('completed test_list_mediatypes_for_resource_profile()')
     test_get_mediatype_for_response_profile()
     print('completed test_get_mediatype_for_responce_profile()')
 
