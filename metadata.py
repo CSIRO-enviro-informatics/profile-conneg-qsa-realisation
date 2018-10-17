@@ -1,4 +1,5 @@
 import pytest
+import pprint
 
 
 BASE_URI = 'http://localhost:5000'
@@ -106,7 +107,7 @@ METADATA = {
     ],
     'licences': [
         {
-            'uri': '/license/1',
+            'uri': '/licence/1',
             'profiles': [
                 {
                     'uri': 'https://creativecommons.org/ns#',
@@ -169,17 +170,17 @@ METADATA = {
                             'uri': 'http://w3id.org/mediatype/text/html',
                             'token': 'text/html',
                             'default': True,
-                            'file': 'catalogue-1-reg.html'
+                            'file': 'catalogue-reg.html'
                         },
                         {
                             'uri': 'http://w3id.org/mediatype/text/turtle',
                             'token': 'text/turtle',
-                            'file': 'catalogue-1-reg.ttl'
+                            'file': 'catalogue-reg.ttl'
                         },
                         {
                             'uri': 'http://w3id.org/mediatype/application/ld+json',
                             'token': 'application/ld+json',
-                            'file': 'catalogue-1-reg.json'
+                            'file': 'catalogue-reg.json'
                         },
                     ]
                 },
@@ -191,17 +192,17 @@ METADATA = {
                             'uri': 'http://w3id.org/mediatype/text/html',
                             'token': 'text/html',
                             'default': True,
-                            'file': 'catalogue-1-aureg.html'
+                            'file': 'catalogue-aureg.html'
                         },
                         {
                             'uri': 'http://w3id.org/mediatype/text/turtle',
                             'token': 'text/turtle',
-                            'file': 'catalogue-1-aureg.ttl'
+                            'file': 'catalogue-aureg.ttl'
                         },
                         {
                             'uri': 'http://w3id.org/mediatype/application/ld+json',
                             'token': 'application/ld+json',
-                            'file': 'catalogue-1-auorg.json'
+                            'file': 'catalogue-auorg.json'
                         },
                     ]
                 }
@@ -224,11 +225,18 @@ get resource
 
 
 class ResourceNotFoundException(Exception):
-    pass
+    def __init__(self):
+        super().__init__('A Resource with that URI was not found.')
 
 
 class ProfileNotFoundException(Exception):
-    pass
+    def __init__(self):
+        super().__init__('A Profile with that ID was not found.')
+
+
+class MediaTypeNotFoundException(Exception):
+    def __init__(self):
+        super().__init__('A Media Type with that ID was not found.')
 
 
 def list_resources(return_only_uris=False):
@@ -244,11 +252,22 @@ def list_resources(return_only_uris=False):
         return all
 
 
+def test_list_resource():
+    expected = {
+        'http://localhost:5000/paper/1',
+        'http://localhost:5000/paper/2',
+        'http://localhost:5000/paper/3',
+        'http://localhost:5000/licence/1',
+        'http://localhost:5000/catalogue'
+    }
+    assert set(list_resources(return_only_uris=True)) == expected
+
+
 def get_resource_profconneg_options(resource_uri):
     resources = list_resources()
     y = [x for x in resources if BASE_URI + x.get('uri') == resource_uri]
     if y == []:
-        raise ResourceNotFoundException('A Resource with that URI was not found')
+        raise ResourceNotFoundException()
     else:
         return y[0]
 
@@ -298,17 +317,14 @@ def list_profiles_for_resource(resource_uri, return_only_uris=False):
     resource with multiple profiles: /paper/3
     -> (epub, http://test.linked.data.gov.au/def/CSIRO-ePub-DCAP; dct, http://purl.org/dc/terms/)
 
-    resource with multiple profiles, no default: /license/1
+    resource with multiple profiles, no default: /licence/1
     -> (cc, https://creativecommons.org/ns#; odrl, http://www.w3.org/ns/odrl)
     """
     # get the resource
     resource = get_resource_profconneg_options(resource_uri)
-    print(resource)
 
     # no profiles listed
-    if len(resource['profiles']) == 1:
-        if resource['profiles'][0].get('token') is None:
-            return None
+
 
     if return_only_uris:
         return [x.get('uri') for x in resource['profiles']]
@@ -317,7 +333,7 @@ def list_profiles_for_resource(resource_uri, return_only_uris=False):
 
 
 def test_list_profiles_for_resource():
-    assert list_profiles_for_resource(BASE_URI + '/paper/1', return_only_uris=True) is None
+    assert list_profiles_for_resource(BASE_URI + '/paper/1', return_only_uris=True) == [None]
 
     assert list_profiles_for_resource(BASE_URI + '/paper/2', return_only_uris=True) == ['http://purl.org/dc/terms/']
 
@@ -328,7 +344,7 @@ def test_list_profiles_for_resource():
     assert set(list_profiles_for_resource(BASE_URI + '/paper/3', return_only_uris=True)) == expected
 
     expected = {'https://creativecommons.org/ns#', 'http://www.w3.org/ns/odrl'}
-    assert set(list_profiles_for_resource(BASE_URI + '/license/1', return_only_uris=True)) == expected
+    assert set(list_profiles_for_resource(BASE_URI + '/licence/1', return_only_uris=True)) == expected
 
 
 def get_profile_for_resource(resource_uri, profile_id=None):
@@ -342,7 +358,7 @@ def get_profile_for_resource(resource_uri, profile_id=None):
     resource with multiple profiles: /paper/3
     -> (epub, http://test.linked.data.gov.au/def/CSIRO-ePub-DCAP; dct, http://purl.org/dc/terms/)
 
-    resource with multiple profiles, no default: /license/1
+    resource with multiple profiles, no default: /licence/1
     -> (cc, https://creativecommons.org/ns#; odrl, http://www.w3.org/ns/odrl)
     """
     profiles = list_profiles_for_resource(resource_uri)
@@ -359,10 +375,12 @@ def get_profile_for_resource(resource_uri, profile_id=None):
                 # TODO: find profile by CURIE
                 if profile_id.startswith('http'):
                     # Profile indicated by URI
-                    return [x for x in profiles if x.get('uri') == profile_id][0]
+                    profile = [x for x in profiles if x.get('uri') == profile_id][0]
                 else:
                     # Profile indicated by token
-                    return [x for x in profiles if x.get('token') == profile_id][0]
+                    profile = [x for x in profiles if x.get('token') == profile_id][0]
+
+                return profile
     else:
         # no profile_id is set so just return any one
         return list_profiles_for_resource(resource_uri)[0]
@@ -466,25 +484,12 @@ def test_get_profile_for_resource():
             },
         ]
     }
-    got = get_profile_for_resource(BASE_URI + '/license/1', 'odrl')
+    got = get_profile_for_resource(BASE_URI + '/licence/1', 'odrl')
     assert expected == got
 
 
 def list_mediatypes_for_resource_profile(resource_uri, profile_id=None, return_only_uris=False):
-    # get profiles for the resource, even if None
-    profiles = list_profiles_for_resource(resource_uri)
-
-    if profiles is None:
-        mediatypes = get_resource_profconneg_options(resource_uri)['profiles'][0].get('mediatypes')
-    else:
-        if profile_id is not None:
-            if profile_id.startswith('http'):
-                mediatypes = [x.get('mediatypes') for x in profiles if x.get('uri') == profile_id][0]
-            else:
-                mediatypes = [x.get('mediatypes') for x in profiles if x.get('token') == profile_id][0]
-        else:
-            # no profile_id is given so just return any profile
-            mediatypes = get_resource_profconneg_options(resource_uri)['profiles'][0].get('mediatypes')
+    mediatypes = get_profile_for_resource(resource_uri, profile_id).get('mediatypes')
 
     if return_only_uris:
         return [x.get('uri') for x in mediatypes]
@@ -527,47 +532,75 @@ def test_list_mediatypes_for_resource_profile():
         profile_id='dct',
         return_only_uris=True))
 
+    expected = {
+        'http://w3id.org/mediatype/text/html',
+        'http://w3id.org/mediatype/text/turtle',
+        'http://w3id.org/mediatype/application/ld+json'
+    }
+    assert expected == set(list_mediatypes_for_resource_profile(
+        BASE_URI + '/licence/1',
+        profile_id='odrl',
+        return_only_uris=True))
+
     # incorrect URI
-    with pytest.raises(ResourceNotFoundException) as e_info:
+    with pytest.raises(ResourceNotFoundException):
         set(list_mediatypes_for_resource_profile(
             BASE_URI + '/paper/23',
             profile_id='dct',
             return_only_uris=True))
 
-    # incorrect peofile_id
-    with pytest.raises(ResourceNotFoundException) as e_info:
-        set(list_mediatypes_for_resource_profile(
-            BASE_URI + '/paper/2',
-            profile_id='dctx',
-            return_only_uris=True))
+    # incorrect profile_id
+    expected = {
+        'http://w3id.org/mediatype/text/html',
+        'http://w3id.org/mediatype/application/ld+json',
+        'http://w3id.org/mediatype/text/turtle'
+    }
+    assert set(list_mediatypes_for_resource_profile(
+        BASE_URI + '/paper/2',
+        profile_id='xxx',
+        return_only_uris=True)) == expected
 
 
-def get_resource_file(resource_uri, profile_id=None, mediatype_id=None):
-    #
-    # if Media Type is set
+def get_mediatype_for_response_profile(resource_uri, profile_id=None, mediatype_id=None):
+    profile = get_profile_for_resource(resource_uri, profile_id)
     if mediatype_id.startswith('http'):
-        # Media Type indicated by URI
-        file = [x for x in list_mediatypes_for_resource_profile(resource_uri, profile_id=profile_id)[0] if x.get('uri') == mediatype_id][0].get('file')
+        mediatype = [x for x in profile['mediatypes'] if x.get('uri') == mediatype_id][0]
     else:
-        # Media Type indicated by token
-        file = [x for x in list_mediatypes_for_resource_profile(resource_uri, profile_id=profile_id)[0] if x.get('token') == mediatype_id][0].get('file')
+        mediatype = [x for x in profile['mediatypes'] if x.get('token') == mediatype_id][0]
 
-    print(file)
-    return file
+    if mediatype is None:
+        return profile[0]  # TODO: replace first with default
+    else:
+        return mediatype
+
+
+def test_get_mediatype_for_response_profile():
+    expected = {
+        'uri': 'http://w3id.org/mediatype/text/turtle',
+        'token': 'text/turtle',
+        'file': 'paper-3-dct.ttl'
+    }
+    assert expected == get_mediatype_for_response_profile(BASE_URI + '/paper/3', profile_id='epub', mediatype_id='text/turtle')
+
+    got = get_mediatype_for_response_profile(BASE_URI + '/catalogue', mediatype_id='application/ld+json').get('file')
+    assert 'catalogue-reg.json' == got
 
 
 def test_all():
-    test_get_resource_profconneg_options()
-    test_list_profiles_for_resource()
-    test_get_profile_for_resource()
-    test_list_mediatypes_for_resource_profile()
+    # test_list_resource()
+    # print('completed test_list_resource()')
+    # test_get_resource_profconneg_options()
+    # print('completed test_get_resource_profconneg_options()')
+    # test_list_profiles_for_resource()
+    # print('completed test_list_profiles_for_resource()')
+    # test_get_profile_for_resource()
+    # print('completed test_get_profile_for_resource()')
+    # test_list_mediatypes_for_resource_profile()
+    # print('completed test_list_mediatypes_for_resource_profile()')
+    test_get_mediatype_for_response_profile()
+    print('completed test_get_mediatype_for_responce_profile()')
 
 
 if __name__ == '__main__':
     print('Testing data.pay...')
-
-    # test_list_mediatypes_for_resource_profile()
-    # print(get_resource_file(BASE_URI + '/paper/3', 'dct', 'http://w3id.org/mediatype/text/turtle'))
-
-    #print(get_profile_for_resource(BASE_URI + '/paper/3'))
     test_all()
