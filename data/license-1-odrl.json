@@ -13,7 +13,7 @@
   },
   "@graph": [
     {
-      "@id": "{{ BASE_URI }}/licence/1",
+      "@id": "{{ BASE_URI }}/license/1",
       "@type": [
         "odrl:Policy",
         "cc:License"
@@ -36,7 +36,7 @@
       },
       "rdfs:comment": {
         "@language": "en",
-        "@value": "A work with this licence is free of known restrictions under copyright law, including all related and neighbouring rights. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission."
+        "@value": "A work with this license is free of known restrictions under copyright law, including all related and neighbouring rights. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission."
       },
       "rdfs:label": {
         "@language": "en",

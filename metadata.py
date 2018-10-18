@@ -42,13 +42,13 @@ METADATA = {
                         {
                             'uri': 'http://w3id.org/mediatype/text/html',
                             'token': 'text/html',
-                            'file': 'paper-2-dct.html'
+                            'file': 'paper-2-dct.html',
+                            'default': True
                         },
                         {
                             'uri': 'http://w3id.org/mediatype/text/turtle',
                             'token': 'text/turtle',
-                            'file': 'paper-2-dct.ttl',
-                            'default': True
+                            'file': 'paper-2-dct.ttl'
                         },
                         {
                             'uri': 'http://w3id.org/mediatype/application/ld+json',
@@ -93,7 +93,8 @@ METADATA = {
                         {
                             'uri': 'http://w3id.org/mediatype/text/html',
                             'token': 'text/html',
-                            'file': 'paper-3-dct.html'
+                            'file': 'paper-3-dct.html',
+                            'default': True
                         },
                         {
                             'uri': 'http://w3id.org/mediatype/text/turtle',
@@ -105,9 +106,9 @@ METADATA = {
             ]
         }
     ],
-    'licences': [
+    'licenses': [
         {
-            'uri': '/licence/1',
+            'uri': '/license/1',
             'profiles': [
                 {
                     'uri': 'https://creativecommons.org/ns#',
@@ -117,17 +118,17 @@ METADATA = {
                             'uri': 'http://w3id.org/mediatype/text/html',
                             'token': 'text/html',
                             'default': True,
-                            'file': 'licence-1-cc.html'
+                            'file': 'license-1-cc.html'
                         },
                         {
                             'uri': 'http://w3id.org/mediatype/text/plain',
                             'token': 'text/plain',
-                            'file': 'licence-1-cc.txt'
+                            'file': 'license-1-cc.txt'
                         },
                         {
                             'uri': 'http://w3id.org/mediatype/application/xml',
                             'token': 'application/xml',
-                            'file': 'licence-1-cc.xml'
+                            'file': 'license-1-cc.xml'
                         },
                     ]
 
@@ -140,17 +141,17 @@ METADATA = {
                             'uri': 'http://w3id.org/mediatype/text/html',
                             'token': 'text/html',
                             'default': True,
-                            'file': 'licence-1-odrl.html'
+                            'file': 'license-1-odrl.html'
                         },
                         {
                             'uri': 'http://w3id.org/mediatype/text/turtle',
                             'token': 'text/turtle',
-                            'file': 'licence-1-odrl.ttl'
+                            'file': 'license-1-odrl.ttl'
                         },
                         {
                             'uri': 'http://w3id.org/mediatype/application/ld+json',
                             'token': 'application/ld+json',
-                            'file': 'licence-1-odrl.json'
+                            'file': 'license-1-odrl.json'
                         },
                     ]
                 }
@@ -241,7 +242,7 @@ class MediaTypeNotFoundException(Exception):
 
 def list_resources(return_only_uris=False):
     r = [x for x in METADATA['research_papers']]
-    l = [x for x in METADATA['licences']]
+    l = [x for x in METADATA['licenses']]
     c = [x for x in METADATA['catalogues']]
 
     all = r + l + c
@@ -257,7 +258,7 @@ def test_list_resource():
         'http://localhost:5000/paper/1',
         'http://localhost:5000/paper/2',
         'http://localhost:5000/paper/3',
-        'http://localhost:5000/licence/1',
+        'http://localhost:5000/license/1',
         'http://localhost:5000/catalogue'
     }
     assert set(list_resources(return_only_uris=True)) == expected
@@ -284,13 +285,13 @@ def test_get_resource_profconneg_options():
                     {
                         'uri': 'http://w3id.org/mediatype/text/html',
                         'token': 'text/html',
-                        'file': 'paper-2-dct.html'
+                        'file': 'paper-2-dct.html',
+                        'default': True
                     },
                     {
                         'uri': 'http://w3id.org/mediatype/text/turtle',
                         'token': 'text/turtle',
-                        'file': 'paper-2-dct.ttl',
-                        'default': True
+                        'file': 'paper-2-dct.ttl'
                     },
                     {
                         'uri': 'http://w3id.org/mediatype/application/ld+json',
@@ -302,7 +303,6 @@ def test_get_resource_profconneg_options():
         ],
     }
     got = get_resource_profconneg_options(BASE_URI + '/paper/2')
-
     assert expected == got
 
 
@@ -317,7 +317,7 @@ def list_profiles_for_resource(resource_uri, return_only_uris=False):
     resource with multiple profiles: /paper/3
     -> (epub, http://test.linked.data.gov.au/def/CSIRO-ePub-DCAP; dct, http://purl.org/dc/terms/)
 
-    resource with multiple profiles, no default: /licence/1
+    resource with multiple profiles, no default: /license/1
     -> (cc, https://creativecommons.org/ns#; odrl, http://www.w3.org/ns/odrl)
     """
     # get the resource
@@ -341,7 +341,7 @@ def test_list_profiles_for_resource():
     assert set(list_profiles_for_resource(BASE_URI + '/paper/3', return_only_uris=True)) == expected
 
     expected = {'https://creativecommons.org/ns#', 'http://www.w3.org/ns/odrl'}
-    assert set(list_profiles_for_resource(BASE_URI + '/licence/1', return_only_uris=True)) == expected
+    assert set(list_profiles_for_resource(BASE_URI + '/license/1', return_only_uris=True)) == expected
 
 
 def get_profile_for_resource(resource_uri, profile_id=None):
@@ -355,7 +355,7 @@ def get_profile_for_resource(resource_uri, profile_id=None):
     resource with multiple profiles: /paper/3
     -> (epub, http://test.linked.data.gov.au/def/CSIRO-ePub-DCAP; dct, http://purl.org/dc/terms/)
 
-    resource with multiple profiles, no default: /licence/1
+    resource with multiple profiles, no default: /license/1
     -> (cc, https://creativecommons.org/ns#; odrl, http://www.w3.org/ns/odrl)
     """
     profiles = list_profiles_for_resource(resource_uri)
@@ -416,13 +416,13 @@ def test_get_profile_for_resource():
             {
                 'uri': 'http://w3id.org/mediatype/text/html',
                 'token': 'text/html',
-                'file': 'paper-2-dct.html'
+                'file': 'paper-2-dct.html',
+                'default': True
             },
             {
                 'uri': 'http://w3id.org/mediatype/text/turtle',
                 'token': 'text/turtle',
-                'file': 'paper-2-dct.ttl',
-                'default': True
+                'file': 'paper-2-dct.ttl'
             },
             {
                 'uri': 'http://w3id.org/mediatype/application/ld+json',
@@ -467,21 +467,21 @@ def test_get_profile_for_resource():
                 'uri': 'http://w3id.org/mediatype/text/html',
                 'token': 'text/html',
                 'default': True,
-                'file': 'licence-1-odrl.html'
+                'file': 'license-1-odrl.html'
             },
             {
                 'uri': 'http://w3id.org/mediatype/text/turtle',
                 'token': 'text/turtle',
-                'file': 'licence-1-odrl.ttl'
+                'file': 'license-1-odrl.ttl'
             },
             {
                 'uri': 'http://w3id.org/mediatype/application/ld+json',
                 'token': 'application/ld+json',
-                'file': 'licence-1-odrl.json'
+                'file': 'license-1-odrl.json'
             },
         ]
     }
-    got = get_profile_for_resource(BASE_URI + '/licence/1', 'odrl')
+    got = get_profile_for_resource(BASE_URI + '/license/1', 'odrl')
     assert expected == got
 
 
@@ -491,7 +491,7 @@ def list_mediatypes_for_resource_profile(resource_uri, profile_id=None, return_o
     if return_only_uris:
         return [x.get('uri') for x in mediatypes]
     else:
-        return mediatypes
+        return [profile_id, mediatypes]
 
 
 def test_list_mediatypes_for_resource_profile():
@@ -535,7 +535,7 @@ def test_list_mediatypes_for_resource_profile():
         'http://w3id.org/mediatype/application/ld+json'
     }
     assert expected == set(list_mediatypes_for_resource_profile(
-        BASE_URI + '/licence/1',
+        BASE_URI + '/license/1',
         profile_id='odrl',
         return_only_uris=True))
 
@@ -561,26 +561,37 @@ def test_list_mediatypes_for_resource_profile():
 def get_mediatype_for_response_profile(resource_uri, profile_id=None, mediatype_id=None):
     profile = get_profile_for_resource(resource_uri, profile_id)
 
+    # even if the client never asked for one, indicate the profile returned
+    profile_id = profile.get('uri')
+
     if mediatype_id is None:
-        return profile['mediatypes'][0]  # TODO: replace first with default
+        mediatype = [x for x in profile['mediatypes'] if x.get('default')]
     else:
         if mediatype_id.startswith('http'):
-            mediatype = [x for x in profile['mediatypes'] if x.get('uri') == mediatype_id][0]
+            mediatype = [x for x in profile['mediatypes'] if x.get('uri') == mediatype_id]
         else:
-            mediatype = [x for x in profile['mediatypes'] if x.get('token') == mediatype_id][0]
+            mediatype = [x for x in profile['mediatypes'] if x.get('token') == mediatype_id]
 
-        return mediatype
+        # if nothing found, return default
+        if len(mediatype) != 1:
+            mediatype = [x for x in profile['mediatypes'] if x.get('default')]
+
+    return [profile_id, mediatype[0]]
 
 
 def test_get_mediatype_for_response_profile():
-    expected = {
-        'uri': 'http://w3id.org/mediatype/text/turtle',
-        'token': 'text/turtle',
-        'file': 'paper-3-dct.ttl'
-    }
-    assert expected == get_mediatype_for_response_profile(BASE_URI + '/paper/3', profile_id='epub', mediatype_id='text/turtle')
+    expected = [
+        'epub',
+        {
+            'uri': 'http://w3id.org/mediatype/text/turtle',
+            'token': 'text/turtle',
+            'file': 'paper-3-dct.ttl'
+        }
+    ]
+    got = get_mediatype_for_response_profile(BASE_URI + '/paper/3', profile_id='epub', mediatype_id='text/turtle')
+    assert expected == got
 
-    got = get_mediatype_for_response_profile(BASE_URI + '/catalogue', mediatype_id='application/ld+json').get('file')
+    got = get_mediatype_for_response_profile(BASE_URI + '/catalogue', mediatype_id='application/ld+json')[1].get('file')
     assert 'catalogue-dcat.json' == got
 
 

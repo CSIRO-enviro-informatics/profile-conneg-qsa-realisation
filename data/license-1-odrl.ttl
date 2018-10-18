@@ -9,13 +9,13 @@
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<{{ BASE_URI }}/licence/1> a cc:License,
+<{{ BASE_URI }}/license/1> a cc:License,
         odrl:Policy ;
     rdfs:label "License 1"@en ;
     dct:created "2018-10-10"^^xsd:date ;
     dct:creator <https://creativecommons.org> ;
     dct:language <http://www.lexvo.org/page/iso639-3/eng> ;
-    rdfs:comment "A work with this licence is free of known restrictions under copyright law, including all related and neighbouring rights. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission."@en ;
+    rdfs:comment "A work with this license is free of known restrictions under copyright law, including all related and neighbouring rights. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission."@en ;
     rdfs:seeAlso <https://creativecommons.org/publicdomain/mark/1.0/> ;
     adms:status <http://dd.eionet.europa.eu/vocabulary/datadictionary/status/submitted> ;
     odrl:permission [ a odrl:Permission ;

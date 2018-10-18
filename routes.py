@@ -17,8 +17,6 @@ form. This would require the server implementation to be willing to advertise pr
 specify prefix assumptions and to match either full URI or CURIE forms.'''
 
 # TODO: register of registers
-# TODO: 3x register
-# TODO: 3x instance accessors
 
 
 @app.route('/')
@@ -40,9 +38,18 @@ def home():
       Specifically, this API is a realisation of the <a href="https://w3c.github.io/dxwg/conneg-by-ap/">Content 
       Negotiation by Profile</a>'s <a href="https://w3c.github.io/dxwg/conneg-by-ap/#abstractmodel">Abstract Model</a>.     
     </p>
+    <h2>Resources</h2>
+    <ul>
+        <li><a href="/paper/1">{BASE_URI}/paper/1</a> - a scientific paper</li>
+        <li><a href="/paper/2">{BASE_URI}/paper/2</a></li>
+        <li><a href="/paper/3">{BASE_URI}/paper/3</a></li>
+        <li><a href="/license/1">{BASE_URI}/license/1</a> - a license for an asset such as a dataset</li>
+        <li><a href="/catalogue">{BASE_URI}/catalogue</a> - a <a href="https://www.w3.org/TR/vocab-dcat-2/">DCAT</a>-style catalogue</li>
+    </ul>
   </body>
 </html>'''.format(
-        title='Profile Conneg QSA Demonstrator'
+        title='Profile Conneg QSA Demonstrator',
+        BASE_URI=metadata.BASE_URI
     )
     # TODO: add about info here
     # TODO: add implemented instance info here
@@ -50,34 +57,59 @@ def home():
     return Response(html)
 
 
+class QueryStringArgumentError(Exception):
+    def __init__(self):
+        super().__init__('Query String Arguments must have the keys _profile or _mediatype.')
+
+
+def validate_qsas():
+    for key, value in request.values.items():
+        if key not in ['_profile', '_mediatype']:
+            raise QueryStringArgumentError()
+
+
 @app.route('/catalogue')
-def catalogue():
-    uri = metadata.BASE_URI + request.path
-    return open(os.path.join(
-        APP_DIR,
-        'data',
-        metadata.get_mediatype_for_response_profile(uri).get('file')
-    ), 'r').read().replace('{{ BASE_URI }}', metadata.BASE_URI)
-
-
 @app.route('/paper/<string:id>')
-def paper(id):
-    uri = metadata.BASE_URI + request.path
-    return open(os.path.join(
-        APP_DIR,
-        'data',
-        metadata.get_mediatype_for_response_profile(uri).get('file')
-    ), 'r').read().replace('{{ BASE_URI }}', metadata.BASE_URI)
-
-
 @app.route('/license/<string:id>')
-def license(id):
+def resource(id=None):
     uri = metadata.BASE_URI + request.path
-    return open(os.path.join(
-        APP_DIR,
-        'data',
-        metadata.get_mediatype_for_response_profile(uri).get('file')
-    ), 'r').read().replace('{{ BASE_URI }}', metadata.BASE_URI)
+
+    # validate input
+    try:
+        validate_qsas()
+    except QueryStringArgumentError as e:
+        return Response(str(e), status=404, mimetype='text/plain')
+
+    # special cases - listing
+    if request.values.get('_profile') == 'list':
+        pass
+    elif request.values.get('_mediatype') == 'list':
+        pass
+    else:
+        # get the metadata for this resource/profile/mediatype
+        mediatype_metadata = metadata.get_mediatype_for_response_profile(
+            uri,
+            profile_id=request.values.get('_profile'),
+            mediatype_id=request.values.get('_mediatype')
+        )
+
+        # preserve the profile_id
+        if mediatype_metadata[0] is not None:
+            headers = {'Content-Profile': '{}'.format(mediatype_metadata[0])}
+        else:
+            headers = None
+
+        # get the content for this resource/profile/mediatype from the relevant file
+        response_content = open(
+            os.path.join(APP_DIR, 'data', mediatype_metadata[1].get('file')), 'r'
+        ).read().replace('{{ BASE_URI }}', metadata.BASE_URI)
+
+        return Response(
+            response_content,
+            status=200,
+            mimetype=mediatype_metadata[1].get('token'),
+            headers=headers
+        )
 
 
 if __name__ == '__main__':
