@@ -67,7 +67,6 @@ def validate_qsas():
         if key not in ['_profile', '_mediatype']:
             raise QueryStringArgumentError()
 
-
 @app.route('/catalogue')
 @app.route('/paper/<string:id>')
 @app.route('/license/<string:id>')
@@ -82,9 +81,29 @@ def resource(id=None):
 
     # special cases - listing
     if request.values.get('_profile') == 'list':
-        pass
+        profiles_uris = metadata.list_profiles_for_resource(uri, return_only_uris=True)
+
+        return Response('\n'.join(profiles_uris), mimetype='text/uri-list')
     elif request.values.get('_mediatype') == 'list':
-        pass
+        mediatype_metadata = metadata.get_mediatype_for_response_profile(
+            uri,
+            profile_id=request.values.get('_profile'),
+            mediatype_id=request.values.get('_mediatype')
+        )
+
+        # preserve the profile_id
+        if mediatype_metadata[0] is not None:
+            headers = {'Content-Profile': '{}'.format(mediatype_metadata[0])}
+        else:
+            headers = None
+
+        mediatypes_uris = metadata.list_mediatypes_for_resource_profile(
+            uri,
+            profile_id=request.values.get('_profile'),
+            return_only_uris=True,
+        )
+
+        return Response('\n'.join(mediatypes_uris), mimetype='text/uri-list', headers=headers)
     else:
         # get the metadata for this resource/profile/mediatype
         mediatype_metadata = metadata.get_mediatype_for_response_profile(
@@ -106,7 +125,6 @@ def resource(id=None):
 
         return Response(
             response_content,
-            status=200,
             mimetype=mediatype_metadata[1].get('token'),
             headers=headers
         )
