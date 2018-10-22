@@ -1,6 +1,5 @@
 import os
-from flask import Flask, Blueprint, render_template, request, redirect, url_for, abort, jsonify, Response
-from rdflib import Graph, RDF, RDFS, Literal, URIRef, XSD, OWL, BNode
+from flask import Flask, Blueprint, render_template, request, Response
 import json
 import metadata
 
@@ -82,7 +81,6 @@ def resource(id=None):
         else:
             return render_template('profile_list.html', profiles=profiles, headers=headers)
     elif request.values.get('_profile') == 'tokens':
-        print('inside list-tokens')
         # this request can only adhere to which profile
         headers = {'Content-Profile': '{}'.format('http://www.w3.org/ns/prof/')}  # TODO: address this meta profile
 
@@ -151,7 +149,7 @@ def resource(id=None):
         # get the content for this resource/profile/mediatype from the relevant file
         response_content = open(
             os.path.join(APP_DIR, 'data', mediatype_metadata[1].get('file')), 'r'
-        ).read().replace('{{ BASE_URI }}', metadata.BASE_URI)
+        ).read().encode('utf-8').replace('{{ BASE_URI }}', metadata.BASE_URI)
 
         return Response(
             response_content,
