@@ -109,6 +109,7 @@
         <td>
             <p>Returns a list of URIs for the Media Types available for that <em>Resource</em> for that <em>Profile</em></p>
             <p>Available Media Types: <code>application/json</code>, <code>text/uri-list</code>, <code>text/html</code></p>
+            <p>If a particular Media Type response is wanted, as opposed to the HTML default, then this should be specified, via token or URI, after the keyword <code>list</code> separated by a comma.</p>
         </td>
         <td>
             <p><a href="{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=list">{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=list</a> (HTML)</p>
@@ -126,6 +127,7 @@
         <td>
             <p>Returns a list of token/URI mappings for <em>Media Types</em> for a <em>Resource's</em> according to a particular <em>Profile</em>.</p>
             <p>Available Media Types: <code>application/json</code>, <code>text/html</code></p>
+            <p>If a particular Media Type response is wanted, as opposed to the HTML default, then this should be specified, via token or URI, after the keyword <code>tokens</code> separated by a comma.</p>
         </td>
         <td>
             <p><a href="{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=tokens">{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=tokens</a> (HTML)</p>
