@@ -1,9 +1,60 @@
 <html>
     <head>
-        <title>Paper 2</title>
+        <title>Paper 3</title>
     </head>
     <body>
-        <h1>Paper 2</h1>
-        <p>This is the dummy Paper 2 record, according to the <strong><em>epub</em></strong> profile.</p>
+        <h1>Paper 3</h1>
+        <p>This is the dummy Paper 3 record, according to the <strong><em>epub</em></strong> profile.</p>
+        <style>
+            .properties {
+                border-collapse: collapse;
+                border: solid 2px black;
+            }
+            .properties td,
+            .properties th {
+                padding: 5px;
+                border: solid 1px black;
+            }
+        </style>
+        <table class="properties">
+            <tr><th>Property</th><th>Value</th></tr>
+            <tr><th><a href="http://purl.org/dc/terms/title">dct:title</a></th><td>Distributed Persistent Identifiers System Design</td></tr>
+            <tr><th><a href="http://purl.org/dc/terms/abstract">dct:abstract</a></th>
+                <td>
+                    <p>The need to identify both digital and physical objects is ubiquitous in our society. Past and present persistent identifier (PID) systems, of which there is a great variety in terms of technical and social implementation, have evolved with the advent of the Internet, which has allowed for globally unique and globally resolvable identifiers. PID systems have, by in large, catered for identifier uniqueness, integrity, and persistence, regardless of the identifier’s application domain. Trustworthiness of these systems has been measured by the criteria first defined by Bütikofer (2009) and further elaborated by Golodoniuc et al. (2016) and Car et al. (2017).</p>
+                    <p>Since many PID systems have been largely conceived and developed by a single organisation they faced challenges for widespread adoption and, most importantly, the ability to survive change of technology. We believe that a cause of PID systems that were once successful fading away is the centralisation of support infrastructure – both organisational and computing and data storage systems.</p>
+                    <p>In this paper, we propose a PID system design that implements the pillars of a trustworthy system – ensuring identifiers’ independence of any particular technology or organisation, implementation of core PID system functions, separation from data delivery, and enabling the system to adapt for future change. We propose decentralisation at all levels — persistent identifiers and information objects registration, resolution, and data delivery — using Distributed Hash Tables and traditional peer-to-peer networks with information replication and caching mechanisms, thus eliminating the need for a central PID data store. This will increase overall system fault tolerance thus ensuring its trustworthiness. We also discuss important aspects of the distributed system’s governance, such as the notion of the authoritative source and data integrity.</p>
+                </td>
+            </tr>
+            <tr><th><a href="http://purl.org/dc/terms/subject">dct:subject</a></th>
+                <td>
+                    <a href="http://id.loc.gov/authorities/subjects/sh2001003097">http://id.loc.gov/authorities/subjects/sh2001003097</a><br />
+                    <a href="http://id.loc.gov/authorities/subjects/sh99010374">http://id.loc.gov/authorities/subjects/sh99010374</a>
+                </td>
+            </tr>
+            <tr>
+                <th><a href="http://www.w3.org/ns/dcat#keyword">dcat:keyword</a></th>
+                <td>
+                    Identifier systems<br />
+                    persistent identifiers<br />
+                    distributed systems<br />
+                    Distributed Hash Tables<br />
+                    peer-to-peer networks<br />
+                    PID<br />
+                    P2P
+                </td>
+            </tr>
+            <tr>
+                <th><a href="http://purl.org/dc/terms/creator">dct:creator</a></th>
+                <td>
+                    <a href="#golodoniuc">golodoniuc</a><br />
+                    <a href="#car">car</a><br />
+                    <a href="#klump">klump</a>
+                </td>
+            </tr>
+            <tr><th><a href="http://purl.org/dc/terms/created">dct:created</a></th><td>2017-03-15</td></tr>
+            <tr><th><a href="http://purl.org/dc/terms/dateAccepted">dct:dateAccepted</a></th><td>2017-06-28</td></tr>
+            <tr><th><a href="http://purl.org/dc/terms/publisher">dct:publisher</a></th><td><a href="#dsj">dsj</a></td></tr>
+        </table>
     </body>
 </html>

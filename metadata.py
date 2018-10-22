@@ -71,18 +71,18 @@ METADATA = {
                         {
                             'uri': 'http://w3id.org/mediatype/text/html',
                             'token': 'text/html',
-                            'file': 'paper-3-dct.html',
+                            'file': 'paper-3-epub.html',
                             'default': True
                         },
                         {
                             'uri': 'http://w3id.org/mediatype/text/turtle',
                             'token': 'text/turtle',
-                            'file': 'paper-3-dct.ttl'
+                            'file': 'paper-3-epub.ttl'
                         },
                         {
                             'uri': 'http://w3id.org/mediatype/application/ld+json',
                             'token': 'application/ld+json',
-                            'file': 'paper-3-dct.json'
+                            'file': 'paper-3-epub.json'
                         },
                     ]
                 },
@@ -344,6 +344,24 @@ def test_list_profiles_for_resource():
     assert set(list_profiles_for_resource(BASE_URI + '/license/1', return_only_uris=True)) == expected
 
 
+def list_profiles_tokens_uris_mappings_for_resource(resource_uri):
+    resource = get_resource_profconneg_options(resource_uri)
+
+    mapping = {}
+    for profile in resource['profiles']:
+        mapping[profile.get('token')] = profile.get('uri')
+
+    return mapping
+
+
+def test_list_profiles_tokens_uris_mappings_for_resource():
+    expected = {
+        'epub': 'http://test.linked.data.gov.au/def/CSIRO-ePub-DCAP',
+        'dct': 'http://purl.org/dc/terms/'
+    }
+    assert expected == list_profiles_tokens_uris_mappings_for_resource(BASE_URI + '/paper/3')
+
+
 def get_profile_for_resource(resource_uri, profile_id=None):
     """
     resource with no profiles: /paper/1
@@ -368,16 +386,19 @@ def get_profile_for_resource(resource_uri, profile_id=None):
             # if there is only one profile, return that
             if len(profiles) == 1:
                 return profiles[0]
+            # there are multiple Profiles for this Resource so find the best one
             else:
-                # TODO: find profile by CURIE
                 if profile_id.startswith('http'):
                     # Profile indicated by URI
-                    profile = [x for x in profiles if x.get('uri') == profile_id][0]
+                    profile = [x for x in profiles if x.get('uri') == profile_id]
+                    if len(profile) == 0:
+                        profile = profiles[0]
                 else:
                     # Profile indicated by token
-                    profile = [x for x in profiles if x.get('token') == profile_id][0]
-
-                return profile
+                    profile = [x for x in profiles if x.get('token') == profile_id]
+                    if len(profile) == 0:
+                        profile = profiles[0]
+                return profile[0]
     else:
         # no profile_id is set so just return any one
         return list_profiles_for_resource(resource_uri)[0]
@@ -446,7 +467,8 @@ def test_get_profile_for_resource():
             {
                 'uri': 'http://w3id.org/mediatype/text/html',
                 'token': 'text/html',
-                'file': 'paper-3-dct.html'
+                'file': 'paper-3-dct.html',
+                'default': True
             },
             {
                 'uri': 'http://w3id.org/mediatype/text/turtle',
@@ -558,10 +580,31 @@ def test_list_mediatypes_for_resource_profile():
         return_only_uris=True)) == expected
 
 
-def get_mediatype_for_response_profile(resource_uri, profile_id=None, mediatype_id=None):
+def list_mediatypes_tokens_uris_mappings_for_resource(resource_uri, profile_id=None):
+    mediatypes = get_profile_for_resource(resource_uri, profile_id).get('mediatypes')
+
+    mapping = {}
+    for mediatype in mediatypes:
+        mapping[mediatype.get('token')] = mediatype.get('uri')
+
+    return mapping
+
+
+def test_list_mediatypes_tokens_uris_mappings_for_resource():
+    expected = {
+        'text/html': 'http://w3id.org/mediatype/text/html',
+        'text/turtle': 'http://w3id.org/mediatype/text/turtle',
+        'application/ld+json': 'http://w3id.org/mediatype/application/ld+json'
+    }
+    got = list_mediatypes_tokens_uris_mappings_for_resource(BASE_URI + '/paper/3', 'epub')
+    assert expected == got
+
+
+def get_mediatype_for_profile(resource_uri, profile_id=None, mediatype_id=None):
     profile = get_profile_for_resource(resource_uri, profile_id)
 
     # even if the client never asked for one, indicate the profile returned
+    pprint.pprint(profile)
     profile_id = profile.get('uri')
 
     if mediatype_id is None:
@@ -579,19 +622,19 @@ def get_mediatype_for_response_profile(resource_uri, profile_id=None, mediatype_
     return [profile_id, mediatype[0]]
 
 
-def test_get_mediatype_for_response_profile():
+def test_get_mediatype_for_profile():
     expected = [
-        'epub',
+        'http://test.linked.data.gov.au/def/CSIRO-ePub-DCAP',
         {
             'uri': 'http://w3id.org/mediatype/text/turtle',
             'token': 'text/turtle',
-            'file': 'paper-3-dct.ttl'
+            'file': 'paper-3-epub.ttl'
         }
     ]
-    got = get_mediatype_for_response_profile(BASE_URI + '/paper/3', profile_id='epub', mediatype_id='text/turtle')
+    got = get_mediatype_for_profile(BASE_URI + '/paper/3', profile_id='epub', mediatype_id='text/turtle')
     assert expected == got
 
-    got = get_mediatype_for_response_profile(BASE_URI + '/catalogue', mediatype_id='application/ld+json')[1].get('file')
+    got = get_mediatype_for_profile(BASE_URI + '/catalogue', mediatype_id='application/ld+json')[1].get('file')
     assert 'catalogue-dcat.json' == got
 
 
@@ -603,11 +646,15 @@ def test_all():
     test_list_profiles_for_resource()
     print('completed test_list_profiles_for_resource()')
     test_get_profile_for_resource()
+    print('completed test_list_profiles_tokens_for_resource()')
+    test_list_profiles_tokens_uris_mappings_for_resource()
     print('completed test_get_profile_for_resource()')
     test_list_mediatypes_for_resource_profile()
     print('completed test_list_mediatypes_for_resource_profile()')
-    test_get_mediatype_for_response_profile()
+    test_get_mediatype_for_profile()
     print('completed test_get_mediatype_for_responce_profile()')
+    test_list_mediatypes_tokens_uris_mappings_for_resource()
+    print('completed test_list_mediatypes_tokens_uris_mappings_for_resource()')
 
 
 if __name__ == '__main__':

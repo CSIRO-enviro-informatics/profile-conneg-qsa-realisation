@@ -15,5 +15,5 @@ In this paper, we propose a PID system design that implements the pillars of a t
     dct:creator eg:golodoniuc , eg:car , eg:klump ;
     dct:created "2017-03-15"^^xsd:date ;
     dct:dateAccepted "2017-06-28"^^xsd:date ;
-    dct:publisher eg:mssanz ;
+    dct:publisher eg:dsj ;
 .

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Profile Conneg QSA Demonstrator</title>
+  </head>
+  <body>
+    <h1>Profile Conneg QSA Demonstrator</h1>
+    <p>
+      This small <a href="https://www.python.org/">Python</a> <a href="http://flask.pocoo.org/">Flask</a> web
+      application that demonstrates profile-based content negotiation, as per the developing <em>profile</em>
+      specifications from the <a href="https://www.w3.org/2017/dxwg/">Dataset Exchange Working Group</a>.
+    </p>
+    <p>
+      Specifically, this API is a realisation of the <a href="https://w3c.github.io/dxwg/conneg-by-ap/">Content
+      Negotiation by Profile</a>'s <a href="https://w3c.github.io/dxwg/conneg-by-ap/#abstractmodel">Abstract Model</a>.
+    </p>
+    <h2>Resources</h2>
+    <ul>
+      <li><a href="{{ BASE_URI }}/paper/1">{{ BASE_URI }}/paper/1</a> - a scientific paper, no profiles declared</li>
+      <li><a href="{{ BASE_URI }}/paper/2">{{ BASE_URI }}/paper/2</a> - one profile declared</li>
+      <li><a href="{{ BASE_URI }}/paper/3">{{ BASE_URI }}/paper/3</a> - two profiles declared</li>
+      <li><a href="{{ BASE_URI }}/license/1">{{ BASE_URI }}/license/1</a> - a license for an asset such as a dataset, two profiles declared</li>
+      <li><a href="{{ BASE_URI }}/catalogue">{{ BASE_URI }}/catalogue</a> - a <a href="https://www.w3.org/TR/vocab-dcat-2/">DCAT</a>-style catalogue, two profiles declared</li>
+    </ul>
+    <h2>API</h2>
+    <p>
+      This API is both a realisation of the Content Negotiation by Profile's Abstract Model and also an emulation of
+      the HTTP implementation in that it aims to be feature equivalent. For this reason, the HTTP equivalents of each
+      API function is indicated below.
+    </p>
+    <style>
+      .properties {
+        border-collapse: collapse;
+        border: solid 2px black;
+      }
+      .properties td,
+      .properties th {
+        padding: 5px;
+        border: solid 1px black;
+      }
+    </style>
+    <table class="properties">
+      <tr>
+         <th>Abstract Function</th><th>QSA command</th><th>HTTP equivalent</th><th>Description</th><th>Example</th>
+      </tr>
+      <tr>
+        <td>List profiles available for a <em>Resource</em></td>
+        <td><code>?_profile=list</code></td>
+        <td><code>GET Resource</code></td>
+        <td>
+          <p>Returns a list of URIs for <em>Profile</em> according to which this <em>Resource</em> can be delivered.</p>
+          <p>Available Media Types: <code>application/json</code>, <code>text/uri-list</code>, <code>text/html</code></p>
+          <p>NOTE: GETing a <em>Resource</em>, as per the HTTP implementation, results in the requested
+             <em>Profile</em>s the <em>Resource</em> is able to be delivered according to being listed in
+             <code>Link</code> HTTP headers. All <code>?_profile=list</code> &amp; <code>?_profile=PROFILE_ID</code>
+              requests to this API also return equivalent <code>Link</code> HTTP headers.
+          </p>
+        </td>
+        <td>
+            <p><a href="{{ BASE_URI }}/paper/3?_profile=list">{{ BASE_URI }}/paper/3?_profile=list</a> (HTML)</p>
+            <p><a href="{{ BASE_URI }}/paper/3?_profile=list&_mediatype=text/uri-list">{{ BASE_URI }}/paper/3?_profile=list&_mediatype=text/uri-list</a> (text/uri-list)</p>
+            <p><a href="{{ BASE_URI }}/paper/3?_profile=list&_mediatype=application/json">{{ BASE_URI }}/paper/3?_profile=list&_mediatype=application/json</a> (JSON)</p>
+        </td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>List profiles token/URI mapping for a <em>Resource</em></td>
+        <td><code>?_profile=ids</code></td>
+        <td>-</td>
+        <td>
+            <p>Returns a list of token/URI mappings for <em>Profile</em>s available for this <em>Resource</em>.</p>
+            <p>Available Media Types: <code>application/json</code>, <code>text/html</code></p>
+        </td>
+        <td>
+            <p><a href="{{ BASE_URI }}/paper/3?_profile=ids">{{ BASE_URI }}/paper/3?_profile=ids</a> (HTML)</p>
+            <p><a href="{{ BASE_URI }}/paper/3?_profile=ids&_mediatype=application/json">{{ BASE_URI }}/paper/3?_profile=ids&_mediatype=application/json</a> (JSON)</p>
+        </td>
+      </tr>
+      <tr>
+          <td>Retrieve a <em>Resource</em> according to a <em>Profile</em></td>
+        <td>
+            <p><code>?_profile=PROFILE_ID</code></p>
+            <p>PROFILE_ID := PROFILE_URI | PROFILE_TOKEN</p>
+        </td>
+        <td><code>Accept-Profile: PROFILE_URI</code></td>
+        <td>
+            <p>Returns the <em>Resource</em> according to the requested <em>Profile</em> defined by the PROFILE_ID if
+            the server is able to fulfill the requests, else the default <em>Profile</em> for the <em>Resource</em> is
+            returned.</p>
+        </td>
+        <td>
+            <p><a href="{{ BASE_URI }}/paper/3?_profile=http://test.linked.data.gov.au/def/CSIRO-ePub-DCAP">{{ BASE_URI }}/paper/3?_profile=http://test.linked.data.gov.au/def/CSIRO-ePub-DCAP</a> (URI)</p>
+            <p><a href="{{ BASE_URI }}/paper/3?_profile=epub">{{ BASE_URI }}/paper/3?_profile=epub</a> (token)</p>
+        </td>
+      </tr>
+      <tr>
+        <td>List <em>Media Types</em> available for a <em>Resource</em> according to a <em>Profile</em></td>
+        <td>
+            <p><code>?_profile=PROFILE_ID&_mediatype=list[,MEDIATYPE_ID]</code></p>
+            <p>MEDIATYPE_ID := MEDIATYPE_URI | MEDIATYPE_TOKEN</p>
+        </td>
+        <td>-</td>
+        <td>
+            <p>Returns a list of URIs for the Media Types available for that <em>Resource</em> for that <em>Profile</em></p>
+            <p>Available Media Types: <code>application/json</code>, <code>text/uri-list</code>, <code>text/html</code></p>
+        </td>
+        <td>
+            <p><a href="{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=list">{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=list</a> (HTML)</p>
+            <p><a href="{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=list,text/uri-list">{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=list,text/uri-list</a> (text/uri-list)</p>
+            <p><a href="{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=list,application/json">{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=list,application/json</a> (JSON)</p>
+        </td>
+      </tr>
+      <tr>
+        <td>List <em>Media Types</em> token/URI mapping for a <em>Resource</em>'s a <em>Profile</em></td>
+        <td>
+            <p><code>?_profile=PROFILE_ID&_mediatype=ids[,MEDIATYPE_ID]</code></p>
+            <p>MEDIATYPE_ID := MEDIATYPE_URI | MEDIATYPE_TOKEN</p>
+        </td>
+        <td>-</td>
+        <td>
+            <p>Returns a list of token/URI mappings for <em>Media Types</em> for a <em>Resource's</em> according to a particular <em>Profile</em>.</p>
+            <p>Available Media Types: <code>application/json</code>, <code>text/html</code></p>
+        </td>
+        <td>
+            <p><a href="{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=ids">{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=ids</a> (HTML)</p>
+            <p><a href="{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=ids,application/json">{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=ids,application/json</a> (JSON)</p>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Media Types' token/URI mapping for a Resource</title>
+</head>
+<body>
+    <h1>Media Types' token/URI mapping for Resource</h1>
+    <h2>For Resource &lt;{{ request.base_url }}&gt;</h2>
+    <h2>For Profile &lt;{{ profile }}&gt;</h2>
+    {% if mapping is not none %}
+        <table>
+        {% for k,v in mapping.items() %}
+            <tr><td>{{ k }}:</td><td><a href="{{ v }}">{{ v }}</a></td></tr>
+        {% endfor %}
+        </table>
+    {% endif %}
+</body>
+</html>
