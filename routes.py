@@ -81,7 +81,7 @@ def resource(id=None):
             return Response(json.dumps(profiles), headers=headers)
         else:
             return render_template('profile_list.html', profiles=profiles, headers=headers)
-    elif request.values.get('_profile') == 'ids':
+    elif request.values.get('_profile') == 'tokens':
         print('inside list-tokens')
         # this request can only adhere to which profile
         headers = {'Content-Profile': '{}'.format('http://www.w3.org/ns/prof/')}  # TODO: address this meta profile
@@ -126,7 +126,7 @@ def resource(id=None):
                 return Response(json.dumps(mediatypes_uris), headers=headers)
             else:
                 return render_template('mediatype_list.html', profile=mediatype_metadata[0], mediatypes=mediatypes_uris)
-        elif request.values.get('_mediatype') == 'ids' or request.values.get('_mediatype').startswith('ids,'):
+        elif request.values.get('_mediatype') == 'tokens' or request.values.get('_mediatype').startswith('tokens,'):
             mapping = metadata.list_mediatypes_tokens_uris_mappings_for_resource(request.base_url, profile_id=mediatype_metadata[0])
 
             # either return application/json or text/html

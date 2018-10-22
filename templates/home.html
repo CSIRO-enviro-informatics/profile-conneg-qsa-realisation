@@ -66,15 +66,15 @@
       </tr>
       <tr>
         <td>List profiles token/URI mapping for a <em>Resource</em></td>
-        <td><code>?_profile=ids</code></td>
+        <td><code>?_profile=tokens</code></td>
         <td>-</td>
         <td>
             <p>Returns a list of token/URI mappings for <em>Profile</em>s available for this <em>Resource</em>.</p>
             <p>Available Media Types: <code>application/json</code>, <code>text/html</code></p>
         </td>
         <td>
-            <p><a href="{{ BASE_URI }}/paper/3?_profile=ids">{{ BASE_URI }}/paper/3?_profile=ids</a> (HTML)</p>
-            <p><a href="{{ BASE_URI }}/paper/3?_profile=ids&_mediatype=application/json">{{ BASE_URI }}/paper/3?_profile=ids&_mediatype=application/json</a> (JSON)</p>
+            <p><a href="{{ BASE_URI }}/paper/3?_profile=tokens">{{ BASE_URI }}/paper/3?_profile=tokens</a> (HTML)</p>
+            <p><a href="{{ BASE_URI }}/paper/3?_profile=tokens&_mediatype=application/json">{{ BASE_URI }}/paper/3?_profile=tokens&_mediatype=application/json</a> (JSON)</p>
         </td>
       </tr>
       <tr>
@@ -114,7 +114,7 @@
       <tr>
         <td>List <em>Media Types</em> token/URI mapping for a <em>Resource</em>'s a <em>Profile</em></td>
         <td>
-            <p><code>?_profile=PROFILE_ID&_mediatype=ids[,MEDIATYPE_ID]</code></p>
+            <p><code>?_profile=PROFILE_ID&_mediatype=tokens[,MEDIATYPE_ID]</code></p>
             <p>MEDIATYPE_ID := MEDIATYPE_URI | MEDIATYPE_TOKEN</p>
         </td>
         <td>-</td>
@@ -123,10 +123,25 @@
             <p>Available Media Types: <code>application/json</code>, <code>text/html</code></p>
         </td>
         <td>
-            <p><a href="{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=ids">{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=ids</a> (HTML)</p>
-            <p><a href="{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=ids,application/json">{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=ids,application/json</a> (JSON)</p>
+            <p><a href="{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=tokens">{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=tokens</a> (HTML)</p>
+            <p><a href="{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=tokens,application/json">{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=tokens,application/json</a> (JSON)</p>
         </td>
       </tr>
     </table>
+    <h2>Feedback</h2>
+    <p>The code, data &amp text for this API is online in a code repository at:</p>
+    <ul>
+      <li><a href="https://github.com/CSIRO-enviro-informatics/profile-conneg-qsa-realisation">https://github.com/CSIRO-enviro-informatics/profile-conneg-qsa-realisation</a></li>
+    </ul>
+    <p>Please use the <a href="https://github.com/CSIRO-enviro-informatics/profile-conneg-qsa-realisation/issues">Issue Tracker</a> associated with that API to make any comments or suggestions for it or the Profile Negotiation methods it's showcasing.</p>
+    <p>For all other enquiries:</p>
+    <p>
+        <em>Lead Developer</em><br />
+        <strong>Nicholas Car</strong><br />
+        <em>Senior Experimental Scientist</em><br />
+        CSIRO Land &amp; Water, Environmental Informatics Group<br />
+        Brisbane, Queensland, Australia<br />
+        <a href="mailto:nicholas.car@csiro.au">nicholas.car@csiro.au</a>
+    </p>
   </body>
 </html>
