@@ -12,18 +12,18 @@ METADATA = {
                 {
                     'mediatypes': [
                         {
-                            'uri': 'http://w3id.org/mediatype/text/html',
+                            'uri': 'https://w3id.org/mediatype/text/html',
                             'token': 'text/html',
                             'file': 'paper-1.html',
                             'default': True
                         },
                         {
-                            'uri': 'http://w3id.org/mediatype/text/turtle',
+                            'uri': 'https://w3id.org/mediatype/text/turtle',
                             'token': 'text/turtle',
                             'file': 'paper-1.ttl'
                         },
                         {
-                            'uri': 'http://w3id.org/mediatype/application/ld+json',
+                            'uri': 'https://w3id.org/mediatype/application/ld+json',
                             'token': 'application/ld+json',
                             'file': 'paper-1.json'
                         },
@@ -40,18 +40,18 @@ METADATA = {
                     'token': 'dct',
                     'mediatypes': [
                         {
-                            'uri': 'http://w3id.org/mediatype/text/html',
+                            'uri': 'https://w3id.org/mediatype/text/html',
                             'token': 'text/html',
                             'file': 'paper-2-dct.html',
                             'default': True
                         },
                         {
-                            'uri': 'http://w3id.org/mediatype/text/turtle',
+                            'uri': 'https://w3id.org/mediatype/text/turtle',
                             'token': 'text/turtle',
                             'file': 'paper-2-dct.ttl'
                         },
                         {
-                            'uri': 'http://w3id.org/mediatype/application/ld+json',
+                            'uri': 'https://w3id.org/mediatype/application/ld+json',
                             'token': 'application/ld+json',
                             'file': 'paper-2-dct.json'
                         },
@@ -69,18 +69,18 @@ METADATA = {
                     'default': True,
                     'mediatypes': [
                         {
-                            'uri': 'http://w3id.org/mediatype/text/html',
+                            'uri': 'https://w3id.org/mediatype/text/html',
                             'token': 'text/html',
                             'file': 'paper-3-epub.html',
                             'default': True
                         },
                         {
-                            'uri': 'http://w3id.org/mediatype/text/turtle',
+                            'uri': 'https://w3id.org/mediatype/text/turtle',
                             'token': 'text/turtle',
                             'file': 'paper-3-epub.ttl'
                         },
                         {
-                            'uri': 'http://w3id.org/mediatype/application/ld+json',
+                            'uri': 'https://w3id.org/mediatype/application/ld+json',
                             'token': 'application/ld+json',
                             'file': 'paper-3-epub.json'
                         },
@@ -91,13 +91,13 @@ METADATA = {
                     'token': 'dct',
                     'mediatypes': [
                         {
-                            'uri': 'http://w3id.org/mediatype/text/html',
+                            'uri': 'https://w3id.org/mediatype/text/html',
                             'token': 'text/html',
                             'file': 'paper-3-dct.html',
                             'default': True
                         },
                         {
-                            'uri': 'http://w3id.org/mediatype/text/turtle',
+                            'uri': 'https://w3id.org/mediatype/text/turtle',
                             'token': 'text/turtle',
                             'file': 'paper-3-dct.ttl'
                         }
@@ -115,18 +115,18 @@ METADATA = {
                     'token': 'cc',
                     'mediatypes': [
                         {
-                            'uri': 'http://w3id.org/mediatype/text/html',
+                            'uri': 'https://w3id.org/mediatype/text/html',
                             'token': 'text/html',
                             'default': True,
                             'file': 'license-1-cc.html'
                         },
                         {
-                            'uri': 'http://w3id.org/mediatype/text/plain',
+                            'uri': 'https://w3id.org/mediatype/text/plain',
                             'token': 'text/plain',
                             'file': 'license-1-cc.txt'
                         },
                         {
-                            'uri': 'http://w3id.org/mediatype/application/xml',
+                            'uri': 'https://w3id.org/mediatype/application/xml',
                             'token': 'application/xml',
                             'file': 'license-1-cc.xml'
                         },
@@ -138,18 +138,18 @@ METADATA = {
                     'token': 'odrl',
                     'mediatypes': [
                         {
-                            'uri': 'http://w3id.org/mediatype/text/html',
+                            'uri': 'https://w3id.org/mediatype/text/html',
                             'token': 'text/html',
                             'default': True,
                             'file': 'license-1-odrl.html'
                         },
                         {
-                            'uri': 'http://w3id.org/mediatype/text/turtle',
+                            'uri': 'https://w3id.org/mediatype/text/turtle',
                             'token': 'text/turtle',
                             'file': 'license-1-odrl.ttl'
                         },
                         {
-                            'uri': 'http://w3id.org/mediatype/application/ld+json',
+                            'uri': 'https://w3id.org/mediatype/application/ld+json',
                             'token': 'application/ld+json',
                             'file': 'license-1-odrl.json'
                         },
@@ -168,18 +168,18 @@ METADATA = {
                     'default': True,
                     'mediatypes': [
                         {
-                            'uri': 'http://w3id.org/mediatype/text/html',
+                            'uri': 'https://w3id.org/mediatype/text/html',
                             'token': 'text/html',
                             'default': True,
                             'file': 'catalogue-dcat.html'
                         },
                         {
-                            'uri': 'http://w3id.org/mediatype/text/turtle',
+                            'uri': 'https://w3id.org/mediatype/text/turtle',
                             'token': 'text/turtle',
                             'file': 'catalogue-dcat.ttl'
                         },
                         {
-                            'uri': 'http://w3id.org/mediatype/application/ld+json',
+                            'uri': 'https://w3id.org/mediatype/application/ld+json',
                             'token': 'application/ld+json',
                             'file': 'catalogue-dcat.json'
                         },
@@ -190,18 +190,18 @@ METADATA = {
                     'token': 'ausreg',
                     'mediatypes': [
                         {
-                            'uri': 'http://w3id.org/mediatype/text/html',
+                            'uri': 'https://w3id.org/mediatype/text/html',
                             'token': 'text/html',
                             'default': True,
                             'file': 'catalogue-reg.html'
                         },
                         {
-                            'uri': 'http://w3id.org/mediatype/text/turtle',
+                            'uri': 'https://w3id.org/mediatype/text/turtle',
                             'token': 'text/turtle',
                             'file': 'catalogue-reg.ttl'
                         },
                         {
-                            'uri': 'http://w3id.org/mediatype/application/ld+json',
+                            'uri': 'https://w3id.org/mediatype/application/ld+json',
                             'token': 'application/ld+json',
                             'file': 'catalogue-auorg.json'
                         },
@@ -283,18 +283,18 @@ def test_get_resource_profconneg_options():
                 'token': 'dct',
                 'mediatypes': [
                     {
-                        'uri': 'http://w3id.org/mediatype/text/html',
+                        'uri': 'https://w3id.org/mediatype/text/html',
                         'token': 'text/html',
                         'file': 'paper-2-dct.html',
                         'default': True
                     },
                     {
-                        'uri': 'http://w3id.org/mediatype/text/turtle',
+                        'uri': 'https://w3id.org/mediatype/text/turtle',
                         'token': 'text/turtle',
                         'file': 'paper-2-dct.ttl'
                     },
                     {
-                        'uri': 'http://w3id.org/mediatype/application/ld+json',
+                        'uri': 'https://w3id.org/mediatype/application/ld+json',
                         'token': 'application/ld+json',
                         'file': 'paper-2-dct.json'
                     },
@@ -409,18 +409,18 @@ def test_get_profile_for_resource():
     expected = {
         'mediatypes': [
             {
-                'uri': 'http://w3id.org/mediatype/text/html',
+                'uri': 'https://w3id.org/mediatype/text/html',
                 'token': 'text/html',
                 'file': 'paper-1.html',
                 'default': True
             },
             {
-                'uri': 'http://w3id.org/mediatype/text/turtle',
+                'uri': 'https://w3id.org/mediatype/text/turtle',
                 'token': 'text/turtle',
                 'file': 'paper-1.ttl'
             },
             {
-                'uri': 'http://w3id.org/mediatype/application/ld+json',
+                'uri': 'https://w3id.org/mediatype/application/ld+json',
                 'token': 'application/ld+json',
                 'file': 'paper-1.json'
             },
@@ -435,18 +435,18 @@ def test_get_profile_for_resource():
         'token': 'dct',
         'mediatypes': [
             {
-                'uri': 'http://w3id.org/mediatype/text/html',
+                'uri': 'https://w3id.org/mediatype/text/html',
                 'token': 'text/html',
                 'file': 'paper-2-dct.html',
                 'default': True
             },
             {
-                'uri': 'http://w3id.org/mediatype/text/turtle',
+                'uri': 'https://w3id.org/mediatype/text/turtle',
                 'token': 'text/turtle',
                 'file': 'paper-2-dct.ttl'
             },
             {
-                'uri': 'http://w3id.org/mediatype/application/ld+json',
+                'uri': 'https://w3id.org/mediatype/application/ld+json',
                 'token': 'application/ld+json',
                 'file': 'paper-2-dct.json'
             }
@@ -465,13 +465,13 @@ def test_get_profile_for_resource():
         'token': 'dct',
         'mediatypes': [
             {
-                'uri': 'http://w3id.org/mediatype/text/html',
+                'uri': 'https://w3id.org/mediatype/text/html',
                 'token': 'text/html',
                 'file': 'paper-3-dct.html',
                 'default': True
             },
             {
-                'uri': 'http://w3id.org/mediatype/text/turtle',
+                'uri': 'https://w3id.org/mediatype/text/turtle',
                 'token': 'text/turtle',
                 'file': 'paper-3-dct.ttl'
             }
@@ -486,18 +486,18 @@ def test_get_profile_for_resource():
         'token': 'odrl',
         'mediatypes': [
             {
-                'uri': 'http://w3id.org/mediatype/text/html',
+                'uri': 'https://w3id.org/mediatype/text/html',
                 'token': 'text/html',
                 'default': True,
                 'file': 'license-1-odrl.html'
             },
             {
-                'uri': 'http://w3id.org/mediatype/text/turtle',
+                'uri': 'https://w3id.org/mediatype/text/turtle',
                 'token': 'text/turtle',
                 'file': 'license-1-odrl.ttl'
             },
             {
-                'uri': 'http://w3id.org/mediatype/application/ld+json',
+                'uri': 'https://w3id.org/mediatype/application/ld+json',
                 'token': 'application/ld+json',
                 'file': 'license-1-odrl.json'
             },
@@ -518,9 +518,9 @@ def list_mediatypes_for_resource_profile(resource_uri, profile_id=None, return_o
 
 def test_list_mediatypes_for_resource_profile():
     expected = {
-        'http://w3id.org/mediatype/text/html',
-        'http://w3id.org/mediatype/text/turtle',
-        'http://w3id.org/mediatype/application/ld+json'
+        'https://w3id.org/mediatype/text/html',
+        'https://w3id.org/mediatype/text/turtle',
+        'https://w3id.org/mediatype/application/ld+json'
     }
     assert set(list_mediatypes_for_resource_profile(
         BASE_URI + '/paper/1',
@@ -552,9 +552,9 @@ def test_list_mediatypes_for_resource_profile():
         return_only_uris=True))
 
     expected = {
-        'http://w3id.org/mediatype/text/html',
-        'http://w3id.org/mediatype/text/turtle',
-        'http://w3id.org/mediatype/application/ld+json'
+        'https://w3id.org/mediatype/text/html',
+        'https://w3id.org/mediatype/text/turtle',
+        'https://w3id.org/mediatype/application/ld+json'
     }
     assert expected == set(list_mediatypes_for_resource_profile(
         BASE_URI + '/license/1',
@@ -570,9 +570,9 @@ def test_list_mediatypes_for_resource_profile():
 
     # incorrect profile_id
     expected = {
-        'http://w3id.org/mediatype/text/html',
-        'http://w3id.org/mediatype/application/ld+json',
-        'http://w3id.org/mediatype/text/turtle'
+        'https://w3id.org/mediatype/text/html',
+        'https://w3id.org/mediatype/application/ld+json',
+        'https://w3id.org/mediatype/text/turtle'
     }
     assert set(list_mediatypes_for_resource_profile(
         BASE_URI + '/paper/2',
@@ -592,9 +592,9 @@ def list_mediatypes_tokens_uris_mappings_for_resource(resource_uri, profile_id=N
 
 def test_list_mediatypes_tokens_uris_mappings_for_resource():
     expected = {
-        'text/html': 'http://w3id.org/mediatype/text/html',
-        'text/turtle': 'http://w3id.org/mediatype/text/turtle',
-        'application/ld+json': 'http://w3id.org/mediatype/application/ld+json'
+        'text/html': 'https://w3id.org/mediatype/text/html',
+        'text/turtle': 'https://w3id.org/mediatype/text/turtle',
+        'application/ld+json': 'https://w3id.org/mediatype/application/ld+json'
     }
     got = list_mediatypes_tokens_uris_mappings_for_resource(BASE_URI + '/paper/3', 'epub')
     assert expected == got
@@ -625,7 +625,7 @@ def test_get_mediatype_for_profile():
     expected = [
         'http://test.linked.data.gov.au/def/CSIRO-ePub-DCAP',
         {
-            'uri': 'http://w3id.org/mediatype/text/turtle',
+            'uri': 'https://w3id.org/mediatype/text/turtle',
             'token': 'text/turtle',
             'file': 'paper-3-epub.ttl'
         }
