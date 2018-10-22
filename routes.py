@@ -147,9 +147,8 @@ def resource(id=None):
             headers['Content-Profile'] = '{}'.format(mediatype_metadata[0])
 
         # get the content for this resource/profile/mediatype from the relevant file
-        response_content = open(
-            os.path.join(APP_DIR, 'data', mediatype_metadata[1].get('file')), 'r'
-        ).read().encode('utf-8').replace('{{ BASE_URI }}', metadata.BASE_URI)
+        with open(os.path.join(APP_DIR, 'data', mediatype_metadata[1].get('file')), 'r', encoding="utf-8") as f:
+            response_content = f.read().replace('{{ BASE_URI }}', metadata.BASE_URI)
 
         return Response(
             response_content,
