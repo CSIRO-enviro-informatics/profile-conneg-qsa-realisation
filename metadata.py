@@ -604,16 +604,15 @@ def get_mediatype_for_profile(resource_uri, profile_id=None, mediatype_id=None):
     profile = get_profile_for_resource(resource_uri, profile_id)
 
     # even if the client never asked for one, indicate the profile returned
-    pprint.pprint(profile)
     profile_id = profile.get('uri')
 
     if mediatype_id is None:
         mediatype = [x for x in profile['mediatypes'] if x.get('default')]
     else:
         if mediatype_id.startswith('http'):
-            mediatype = [x for x in profile['mediatypes'] if x.get('uri') == mediatype_id]
+            mediatype = [x for x in profile['mediatypes'] if x.get('uri') == mediatype_id.replace(' ', '+')]
         else:
-            mediatype = [x for x in profile['mediatypes'] if x.get('token') == mediatype_id]
+            mediatype = [x for x in profile['mediatypes'] if x.get('token') == mediatype_id.replace(' ', '+')]
 
         # if nothing found, return default
         if len(mediatype) != 1:

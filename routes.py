@@ -93,7 +93,10 @@ def resource(id=None):
         else:
             return render_template('profile_mapping_list.html', mapping=mapping, headers=headers)
     # if both _profile=list & _mediatype=list, the profile listing wins
-    elif request.values.get('_mediatype') is not None:
+    elif request.values.get('_mediatype') == 'list' \
+            or request.values.get('_mediatype').startswith('list,')\
+            or request.values.get('_mediatype') == 'tokens' \
+            or request.values.get('_mediatype').startswith('tokens,'):
         mediatype_metadata = metadata.get_mediatype_for_profile(
             request.base_url,
             profile_id=request.values.get('_profile'),
