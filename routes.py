@@ -74,6 +74,17 @@ def validate_qsas():
 def resource(id=None):
     uri = metadata.BASE_URI + request.path
 
+    # regardless of the method/QSA, get the profiles for LINK headers
+    profiles = metadata.list_profiles_for_resource(uri, return_only_uris=True)
+    # make LINK headers
+    headers = {}
+    if profiles[0] is not None:
+        links = ''
+        for profile in profiles:
+            links += '<{}>; rel="dct:conformsTo",'.format(profile)
+        links = links[:-1]
+        headers['Link'] = links
+
     # validate input
     try:
         validate_qsas()
@@ -95,9 +106,7 @@ def resource(id=None):
 
         # preserve the profile_id
         if mediatype_metadata[0] is not None:
-            headers = {'Content-Profile': '{}'.format(mediatype_metadata[0])}
-        else:
-            headers = None
+            headers['Content-Profile'] = '{}'.format(mediatype_metadata[0])
 
         # get the content for this resource/profile/mediatype from the relevant file
         response_content = open(
