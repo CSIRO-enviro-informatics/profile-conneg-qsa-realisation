@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Media Types available for Profile</title>
+</head>
+<body>
+    <h1>Media Types for a Profile</h1>
+    <h2>Profile &lt;{{ profile }}&gt;</h2>
+    <h2>Of Resource &lt;{{ request.base_url }}&gt;</h2>
+    {% if mediatypes is not none %}
+        <ul>
+        {% for mediatype in mediatypes %}
+            <li><a href="{{ mediatype }}">{{ mediatype }}</a></li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+</body>
+</html>

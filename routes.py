@@ -67,15 +67,29 @@ def validate_qsas():
         if key not in ['_profile', '_mediatype']:
             raise QueryStringArgumentError()
 
+
 @app.route('/catalogue')
 @app.route('/paper/<string:id>')
 @app.route('/license/<string:id>')
 def resource(id=None):
-    uri = metadata.BASE_URI + request.path
+    '''
+    1. Validate input
 
-    # regardless of the method/QSA, get the profiles for LINK headers
-    profiles = metadata.list_profiles_for_resource(uri, return_only_uris=True)
-    # make LINK headers
+    2. Make Link headers
+
+    3. Handle list requests
+
+    4.
+    '''
+    # 1. Validate input
+    try:
+        validate_qsas()
+    except QueryStringArgumentError as e:
+        return Response(str(e), status=400, mimetype='text/plain')
+
+    # 2. Make Link headers
+    # regardless of the method/QSA, get the profiles for Link headers
+    profiles = metadata.list_profiles_for_resource(request.base_url, return_only_uris=True)
     headers = {}
     if profiles[0] is not None:
         links = ''
@@ -84,41 +98,48 @@ def resource(id=None):
         links = links[:-1]
         headers['Link'] = links
 
-    # validate input
-    try:
-        validate_qsas()
-    except QueryStringArgumentError as e:
-        return Response(str(e), status=404, mimetype='text/plain')
-
-    # special cases - listing
+    # 3. Handle list requests
     if request.values.get('_profile') == 'list':
-        profiles_uris = metadata.list_profiles_for_resource(uri, return_only_uris=True)
-
-        return Response('\n'.join(profiles_uris), mimetype='text/uri-list')
-    elif request.values.get('_mediatype') == 'list':
-        mediatype_metadata = metadata.get_mediatype_for_response_profile(
-            uri,
-            profile_id=request.values.get('_profile'),
-            mediatype_id=request.values.get('_mediatype')
-        )
-
-        # preserve the profile_id
-        if mediatype_metadata[0] is not None:
-            headers = {'Content-Profile': '{}'.format(mediatype_metadata[0])}
+        # this request can only adhere to the Profiles Ontology profile
+        headers = {'Content-Profile': '{}'.format('http://www.w3.org/ns/prof/')}  # TODO: address this meta profile
+        # either return a text/uri-list or text/html
+        if request.accept_mimetypes.best_match(['text/uri-list', 'text/html']) == 'text/uri-list' \
+                or request.values.get('_mediatype') == 'text/uri-list':
+            return Response('\n'.join(profiles), mimetype='text/uri-list', headers=headers)
         else:
-            headers = None
+            return render_template('profile_list.html', profiles=profiles, headers=headers)
+    # if both _profile=list & _mediatype=list, the profile listing wins
+    elif request.values.get('_mediatype') is not None:
+        if request.values.get('_mediatype').startswith('list'):
+            mediatype_metadata = metadata.get_mediatype_for_response_profile(
+                request.base_url,
+                profile_id=request.values.get('_profile'),
+                mediatype_id=request.values.get('_mediatype')
+            )
 
-        mediatypes_uris = metadata.list_mediatypes_for_resource_profile(
-            uri,
-            profile_id=request.values.get('_profile'),
-            return_only_uris=True,
-        )
+            # preserve the profile_id
+            if mediatype_metadata[0] is not None:
+                headers = {'Content-Profile': '{}'.format(mediatype_metadata[0])}
+            else:
+                headers = None
 
-        return Response('\n'.join(mediatypes_uris), mimetype='text/uri-list', headers=headers)
+            mediatypes_uris = metadata.list_mediatypes_for_resource_profile(
+                request.base_url,
+                profile_id=request.values.get('_profile'),
+                return_only_uris=True,
+            )
+            print(mediatypes_uris)
+
+            # either return a text/uri-list or text/html
+            if request.accept_mimetypes.best_match(['text/uri-list', 'text/html']) == 'text/uri-list' \
+                    or 'text/uri-list' in request.values.get('_mediatype'):
+                return Response('\n'.join(mediatypes_uris), mimetype='text/uri-list', headers=headers)
+            else:
+                return render_template('mediatype_list.html', profile=mediatype_metadata[0], mediatypes=mediatypes_uris)
     else:
         # get the metadata for this resource/profile/mediatype
         mediatype_metadata = metadata.get_mediatype_for_response_profile(
-            uri,
+            request.base_url,
             profile_id=request.values.get('_profile'),
             mediatype_id=request.values.get('_mediatype')
         )
@@ -140,4 +161,4 @@ def resource(id=None):
 
 
 if __name__ == '__main__':
-   app.run()
+   app.run(debug=True)
