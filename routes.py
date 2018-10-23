@@ -16,13 +16,9 @@ REFS:
 form. This would require the server implementation to be willing to advertise prefixes it understands, or clients to 
 specify prefix assumptions and to match either full URI or CURIE forms.'''
 
-# TODO: register of registers
-
 
 @app.route('/')
 def home():
-    # TODO: add about info here
-    # TODO: add implemented instance info here
     return render_template('home.html', BASE_URI=metadata.BASE_URI)
 
 
@@ -43,12 +39,10 @@ def validate_qsas():
 def resource(id=None):
     '''
     1. Validate input
-
     2. Make Link headers
-
     3. Handle list requests
-
-    4. Handle list-token requests
+    4. Handle tokens requests
+    5. Handle direct resource/profile/Media Type requests
     '''
     # 1. Validate input
     try:
@@ -63,7 +57,7 @@ def resource(id=None):
     if profiles[0] is not None:
         links = ''
         for profile in profiles:
-            links += '<{}>; rel="dct:conformsTo",'.format(profile)
+            links += '<{}>; rel="profile",'.format(profile)
         links = links[:-1]
         headers['Link'] = links
 
@@ -76,13 +70,14 @@ def resource(id=None):
         if request.accept_mimetypes.best_match(['application/json', 'text/uri-list', 'text/html']) == 'text/uri-list' \
                 or request.values.get('_mediatype') == 'text/uri-list':
             return Response('\n'.join(profiles), mimetype='text/uri-list', headers=headers)
-        elif request.accept_mimetypes.best_match(['application/json', 'text/uri-list', 'text/html']) == 'application/json' \
+        elif request.accept_mimetypes.best_match(
+                ['application/json', 'text/uri-list', 'text/html']) == 'application/json' \
                 or request.values.get('_mediatype') == 'application/json':
             return Response(json.dumps(profiles), headers=headers)
         else:
             return render_template('profile_list.html', profiles=profiles, headers=headers)
     elif request.values.get('_profile') == 'tokens':
-        # this request can only adhere to which profile
+        # 4. Handle tokens requests
         headers = {'Content-Profile': '{}'.format('http://www.w3.org/ns/prof/')}  # TODO: address this meta profile
 
         mapping = metadata.list_profiles_tokens_uris_mappings_for_resource(request.base_url)
@@ -97,7 +92,7 @@ def resource(id=None):
     elif mt == 'list' or mt.startswith('list,') or mt == 'tokens' or mt.startswith('tokens,'):
         mediatype_metadata = metadata.get_mediatype_for_profile(
             request.base_url,
-            profile_id=request.values.get('_profile'),
+            profile_ids=request.values.get('_profile'),
             mediatype_id=mt
         )
 
@@ -107,10 +102,11 @@ def resource(id=None):
         else:
             headers = None
 
+        # 3. Handle list requests
         if mt == 'list' or mt.startswith('list,'):
             mediatypes_uris = metadata.list_mediatypes_for_resource_profile(
                 request.base_url,
-                profile_id=request.values.get('_profile'),
+                profile_ids=request.values.get('_profile'),
                 return_only_uris=True,
             )
 
@@ -125,8 +121,11 @@ def resource(id=None):
                 return Response(json.dumps(mediatypes_uris), headers=headers)
             else:
                 return render_template('mediatype_list.html', profile=mediatype_metadata[0], mediatypes=mediatypes_uris)
+        # 4. Handle tokens requests
         elif mt == 'tokens' or mt.startswith('tokens,'):
-            mapping = metadata.list_mediatypes_tokens_uris_mappings_for_resource(request.base_url, profile_id=mediatype_metadata[0])
+            mapping = metadata.list_mediatypes_tokens_uris_mappings_for_resource(
+                request.base_url, profile_ids=mediatype_metadata[0]
+            )
 
             # either return application/json or text/html
             if request.accept_mimetypes.best_match(
@@ -136,10 +135,10 @@ def resource(id=None):
             else:
                 return render_template('mediatype_mapping_list.html', profile=mediatype_metadata[0], mapping=mapping)
     else:
-        # get the metadata for this resource/profile/mediatype
+        # 5. Handle direct resource/profile/Media Type requests
         mediatype_metadata = metadata.get_mediatype_for_profile(
             request.base_url,
-            profile_id=request.values.get('_profile'),
+            profile_ids=request.values.get('_profile'),
             mediatype_id=mt
         )
 
