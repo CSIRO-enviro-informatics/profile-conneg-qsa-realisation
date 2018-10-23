@@ -404,7 +404,7 @@ def get_profile_for_resource(resource_uri, profile_ids=None):
                     profile = profile[0]
                 # if not, just use the first one from the profiles list from the resource
                 else:
-                    profile = profiles[0]
+                    profile = [x for x in profiles if x.get('default')][0]
 
                 return profile
     else:
@@ -669,25 +669,32 @@ def test_list_mediatypes_tokens_uris_mappings_for_resource():
     assert expected == got
 
 
-def get_mediatype_for_profile(resource_uri, profile_ids=None, mediatype_id=None):
+def get_mediatype_for_profile(resource_uri, profile_ids=None, mediatype_ids=None):
     profile = get_profile_for_resource(resource_uri, profile_ids)
 
     # even if the client never asked for one, indicate the profile returned
-    profile_ids = profile.get('uri')
+    profile_ids = [profile.get('uri')]
 
-    if mediatype_id is None:
+    if mediatype_ids is None:  # just return the default
         mediatype = [x for x in profile['mediatypes'] if x.get('default')]
     else:
-        if mediatype_id.startswith('http'):
-            mediatype = [x for x in profile['mediatypes'] if x.get('uri') == mediatype_id.replace(' ', '+')]
-        else:
-            mediatype = [x for x in profile['mediatypes'] if x.get('token') == mediatype_id.replace(' ', '+')]
+        for mediatype_id in mediatype_ids:
+            if mediatype_id.startswith('http'):
+                mediatype = [x for x in profile['mediatypes'] if x.get('uri') == mediatype_id.replace(' ', '+')]
+            else:
+                mediatype = [x for x in profile['mediatypes'] if x.get('token') == mediatype_id.replace(' ', '+')]
 
-        # if nothing found, return default
-        if len(mediatype) != 1:
+            if len(mediatype) > 0:
+                break
+
+        # if mediatypes are found
+        if len(mediatype) > 0:
+            mediatype = mediatype[0]
+        # if not, just use the first one from the list for the profile
+        else:
             mediatype = [x for x in profile['mediatypes'] if x.get('default')]
 
-    return [profile_ids, mediatype[0]]
+    return [profile.get('uri'), mediatype]
 
 
 def test_get_mediatype_for_profile():
@@ -699,10 +706,10 @@ def test_get_mediatype_for_profile():
             'file': 'paper-3-epub.ttl'
         }
     ]
-    got = get_mediatype_for_profile(BASE_URI + '/paper/3', profile_ids='epub', mediatype_id='text/turtle')
+    got = get_mediatype_for_profile(BASE_URI + '/paper/3', profile_ids=['epub'], mediatype_ids=['text/turtle'])
     assert expected == got
 
-    got = get_mediatype_for_profile(BASE_URI + '/catalogue', mediatype_id='application/ld+json')[1].get('file')
+    got = get_mediatype_for_profile(BASE_URI + '/catalogue', mediatype_ids=['application/ld+json'])[1].get('file')
     assert 'catalogue-dcat.json' == got
 
 

@@ -85,18 +85,21 @@
       <tr>
           <td>Retrieve a <em>Resource</em> according to a <em>Profile</em></td>
         <td>
-            <p><code>?_profile=PROFILE_ID</code></p>
+            <p><code>?_profile=PROFILE_IDS</code></p>
+            <p>PROFILE_IDS := PROFILE_ID[,PROFILE_ID]*</p>
             <p>PROFILE_ID := PROFILE_URI | PROFILE_TOKEN</p>
         </td>
-        <td><code>Accept-Profile: PROFILE_URI</code></td>
+        <td><code>Accept-Profile: PROFILE_URIS</code></td>
         <td>
-            <p>Returns the <em>Resource</em> according to the requested <em>Profile</em> defined by the PROFILE_ID if
-            the server is able to fulfill the requests, else the default <em>Profile</em> for the <em>Resource</em> is
-            returned.</p>
+            <p>Returns the <em>Resource</em> according to the first matched requested <em>Profile</em> defined by a
+            PROFILE_ID within an array of PROFILE_IDS, or the default profile if none are matched.</p>
+            <p>Any combination of URIs or tokens used to identify <em>Profiles</em> can be used.</p>
         </td>
         <td>
             <p><a href="{{ BASE_URI }}/paper/3?_profile=http://test.linked.data.gov.au/def/CSIRO-ePub-DCAP">{{ BASE_URI }}/paper/3?_profile=http://test.linked.data.gov.au/def/CSIRO-ePub-DCAP</a> (URI)</p>
             <p><a href="{{ BASE_URI }}/paper/3?_profile=epub">{{ BASE_URI }}/paper/3?_profile=epub</a> (token)</p>
+            <p><a href="{{ BASE_URI }}/paper/3?_profile=abc,def,xyz,dct,epub">{{ BASE_URI }}/paper/3?_profile=abc,def,xyz,dct,epub</a> (multiple tokens)</p>
+            <p><a href="{{ BASE_URI }}/paper/3?_profile=abc,def,xyz,dct,epub">{{ BASE_URI }}/paper/3?_profile=abc,def,xyz,http://purl.org/dc/terms/,epub</a> (multiple tokens &amp; URIs)</p>
         </td>
       </tr>
       <tr>
@@ -134,10 +137,29 @@
             <p><a href="{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=tokens,application/json">{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=tokens,application/json</a> (JSON)</p>
         </td>
       </tr>
+      <tr>
+        <td>
+            Get a <em>Resource</em> according to a <em>Profile</em> and the first of an array of <em>Media Type</em>.
+        </td>
+        <td>
+            <p><code>?_profile=PROFILE_ID&_mediatype=MEDIATYPE_IDS</code></p>
+            <p>MEDIATYPE_IDS := MEDIATYPE_ID[,MEDIATYPE_ID]*</p>
+            <p>MEDIATYPE_ID := MEDIATYPE_URI | MEDIATYPE_TOKEN</p>
+        </td>
+        <td>-</td>
+        <td>
+            <p>Returns a single representation of a <em>Resource</em> according to a specified <em>Profile</em> and a
+              specified <em>Media Type</em></p>
+            <p>The server will use a default <em>Profile</em> or <em>Media Type</em> if either is not supported.</p>
+        </td>
+        <td>
+            <p><a href="{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=application/xml,application/ld+json">{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=dct,epub</a> (tokens, JSON-LD)</p>
+            <p><a href="{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=http://w3id.org/mediatype/application/xml,https://w3id.org/mediatype/application/ld+jsonx">{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=http://w3id.org/mediatype/application/xml,https://w3id.org/mediatype/application/ld+json</a> (URIs, JSON-LD)</p>
+        </td>
+      </tr>
     </table>
     <h3>Not implemented yet</h3>
     <ul>
-        <li>requests for profiles in preference order <code>_profile=profile_1,profile2...</code></li>
         <li>requests for Media Types of preference order <code>_mediatype=mediatype_1,mediatype_2...</code></li>
     </ul>
     <h2>Feedback</h2>

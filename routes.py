@@ -50,6 +50,16 @@ def resource(id=None):
     except QueryStringArgumentError as e:
         return Response(str(e), status=400, mimetype='text/plain')
 
+    if request.values.get('_profile') is not None:
+        profile_ids = request.values.get('_profile').split(',')
+    else:
+        profile_ids = ['']
+
+    if request.values.get('_mediatype') is not None:
+        mediatype_ids = request.values.get('_mediatype').split(',')
+    else:
+        mediatype_ids = ['']
+
     # 2. Make Link headers
     # regardless of the method/QSA, get the profiles for Link headers
     profiles = metadata.list_profiles_for_resource(request.base_url, return_only_uris=True)
@@ -62,9 +72,8 @@ def resource(id=None):
         headers['Link'] = links
 
     # 3. Handle list requests
-    mt = request.values.get('_mediatype') if request.values.get('_mediatype') is not None else ''
-    if request.values.get('_profile') == 'list':
-        # this request can only adhere to shich profile
+    if profile_ids[0] == 'list':
+        # this request can only adhere to this profile
         headers = {'Content-Profile': '{}'.format('http://www.w3.org/ns/prof/')}  # TODO: address this meta profile
         # either return a text/uri-list, application/json or text/html
         if request.accept_mimetypes.best_match(['application/json', 'text/uri-list', 'text/html']) == 'text/uri-list' \
@@ -76,7 +85,7 @@ def resource(id=None):
             return Response(json.dumps(profiles), headers=headers)
         else:
             return render_template('profile_list.html', profiles=profiles, headers=headers)
-    elif request.values.get('_profile') == 'tokens':
+    elif profile_ids[0] == 'tokens':
         # 4. Handle tokens requests
         headers = {'Content-Profile': '{}'.format('http://www.w3.org/ns/prof/')}  # TODO: address this meta profile
 
@@ -89,11 +98,11 @@ def resource(id=None):
         else:
             return render_template('profile_mapping_list.html', mapping=mapping, headers=headers)
     # if both _profile=list & _mediatype=list, the profile listing wins
-    elif mt == 'list' or mt.startswith('list,') or mt == 'tokens' or mt.startswith('tokens,'):
+    elif mediatype_ids[0] == 'list' or mediatype_ids[0] == 'tokens':
         mediatype_metadata = metadata.get_mediatype_for_profile(
             request.base_url,
-            profile_ids=request.values.get('_profile'),
-            mediatype_id=mt
+            profile_ids=profile_ids,
+            mediatype_ids=mediatype_ids
         )
 
         # preserve the profile_id
@@ -103,26 +112,27 @@ def resource(id=None):
             headers = None
 
         # 3. Handle list requests
-        if mt == 'list' or mt.startswith('list,'):
+        if mediatype_ids[0] == 'list':
             mediatypes_uris = metadata.list_mediatypes_for_resource_profile(
                 request.base_url,
-                profile_ids=request.values.get('_profile'),
+                profile_ids=profile_ids,
                 return_only_uris=True,
             )
 
+            # TODO: cater for conneg & QSA mediatype[1]
             # either return text/uri-list, application/json or text/html
             if request.accept_mimetypes.best_match(
                     ['application/json', 'text/uri-list', 'text/html']) == 'text/uri-list' \
-                    or 'text/uri-list' in mt:
+                    or 'text/uri-list' in mediatype_ids:
                 return Response('\n'.join(mediatypes_uris), mimetype='text/uri-list', headers=headers)
             elif request.accept_mimetypes.best_match(
                     ['application/json', 'text/uri-list', 'text/html']) == 'application/json' \
-                    or 'application/json' in mt:
+                    or 'application/json' in mediatype_ids:
                 return Response(json.dumps(mediatypes_uris), headers=headers)
             else:
                 return render_template('mediatype_list.html', profile=mediatype_metadata[0], mediatypes=mediatypes_uris)
         # 4. Handle tokens requests
-        elif mt == 'tokens' or mt.startswith('tokens,'):
+        elif mediatype_ids[0] == 'tokens':
             mapping = metadata.list_mediatypes_tokens_uris_mappings_for_resource(
                 request.base_url, profile_ids=mediatype_metadata[0]
             )
@@ -130,16 +140,16 @@ def resource(id=None):
             # either return application/json or text/html
             if request.accept_mimetypes.best_match(
                     ['application/json', 'text/uri-list', 'text/html']) == 'application/json' \
-                    or 'application/json' in mt:
+                    or 'application/json' in mediatype_ids:
                 return Response(json.dumps(mapping), headers=headers)
             else:
                 return render_template('mediatype_mapping_list.html', profile=mediatype_metadata[0], mapping=mapping)
+    # 5. Handle direct resource/profile/Media Type requests
     else:
-        # 5. Handle direct resource/profile/Media Type requests
         mediatype_metadata = metadata.get_mediatype_for_profile(
             request.base_url,
-            profile_ids=request.values.get('_profile'),
-            mediatype_id=mt
+            profile_ids=profile_ids,
+            mediatype_ids=mediatype_ids
         )
 
         # preserve the profile_id
