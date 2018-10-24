@@ -6,30 +6,29 @@
   </head>
   <body>
     <h1>Profile Conneg QSA Demonstrator</h1>
-    <p>
-      This small <a href="https://www.python.org/">Python</a> <a href="http://flask.pocoo.org/">Flask</a> web
-      application that demonstrates profile-based content negotiation, as per the developing <em>profile</em>
-      specifications from the <a href="https://www.w3.org/2017/dxwg/">Dataset Exchange Working Group</a>.
-    </p>
-    <p>
-      Specifically, this API is a realisation of the <a href="https://w3c.github.io/dxwg/conneg-by-ap/">Content
-      Negotiation by Profile</a>'s <a href="https://w3c.github.io/dxwg/conneg-by-ap/#abstractmodel">Abstract Model</a>.
-    </p>
-    <h2>Resources</h2>
-    <p>All of the methods listed below in the API section can be used against any of the resources listed here.</p>
-    <ul>
-      <li><a href="{{ BASE_URI }}/paper/1">{{ BASE_URI }}/paper/1</a> - a scientific paper, no profiles declared</li>
-      <li><a href="{{ BASE_URI }}/paper/2">{{ BASE_URI }}/paper/2</a> - one profile declared</li>
-      <li><a href="{{ BASE_URI }}/paper/3">{{ BASE_URI }}/paper/3</a> - two profiles declared</li>
-      <li><a href="{{ BASE_URI }}/license/1">{{ BASE_URI }}/license/1</a> - a license for an asset such as a dataset, two profiles declared</li>
-      <li><a href="{{ BASE_URI }}/catalogue">{{ BASE_URI }}/catalogue</a> - a <a href="https://www.w3.org/TR/vocab-dcat-2/">DCAT</a>-style catalogue, two profiles declared</li>
-    </ul>
-    <h2>API</h2>
-    <p>
-      This API is both a realisation of the Content Negotiation by Profile's Abstract Model and also an emulation of
-      the HTTP implementation in that it aims to be feature equivalent. For this reason, the HTTP equivalents of each
-      API function is indicated below.
-    </p>
+{% filter markdown %}
+This small [Python](https://www.python.org/) [Flask](http://flask.pocoo.org/) web
+application that demonstrates profile-based content negotiation, as per the developing <em>profile</em>
+specifications from the [Dataset Exchange Working Group](https://www.w3.org/2017/dxwg/).
+
+Specifically, this API is a realisation of the [Content
+Negotiation by Profile](https://w3c.github.io/dxwg/conneg-by-ap/)'s
+[Abstract Model](https://w3c.github.io/dxwg/conneg-by-ap/#abstractmodel).
+
+## Resources
+All of the methods listed below in the API section can be used against any of the resources listed here.
+
+* [{{ BASE_URI }}/paper/1]({{ BASE_URI }}/paper/1) - a scientific paper, no profiles declared
+* [{{ BASE_URI }}/paper/2]({{ BASE_URI }}/paper/2) - one profile declared
+* [{{ BASE_URI }}/paper/3]({{ BASE_URI }}/paper/3) - two profiles declared
+* [{{ BASE_URI }}/license/1]({{ BASE_URI }}/license/1) - a license for an asset such as a dataset, two profiles declared
+* [{{ BASE_URI }}/catalogue]({{ BASE_URI }}/catalogue) - a [DCAT](https://www.w3.org/TR/vocab-dcat-2/)-style catalogue, two profiles declared</li>
+
+## API
+This API is both a realisation of the Content Negotiation by Profile's Abstract Model and also an emulation of
+the HTTP implementation in that it aims to be feature equivalent. For this reason, the HTTP equivalents of each
+API function is indicated below.
+{% endfilter %}
     <style>
       .properties {
         border-collapse: collapse;
@@ -47,14 +46,14 @@
       </tr>
       <tr>
         <td>List profiles available for a <em>Resource</em></td>
-        <td><code>?_profile=list</code></td>
-        <td><code>GET Resource</code> or <code>HEAD Resource</code></td>
+        <td><code>RESOURCE_URI?_profile=list</code></td>
+        <td><code>GET RESOURCE_URI</code> or <code>HEAD RESOURCE_URI</code></td>
         <td>
           <p>Returns a list of URIs for <em>Profile</em> according to which this <em>Resource</em> can be delivered.</p>
           <p>Available Media Types: <code>application/json</code>, <code>text/uri-list</code>, <code>text/html</code></p>
           <p>GETing a <em>Resource</em>, as per the HTTP implementation, results in the requested
              <em>Profile</em>s the <em>Resource</em> is able to be delivered according to being listed in
-             <code>Link</code> HTTP headers. All <code>?_profile=list</code> &amp; <code>?_profile=PROFILE_ID</code>
+             <code>Link</code> HTTP headers. All <code>RESOURCE_URI?_profile=list</code> &amp; <code>RESOURCE_URI?_profile=PROFILE_ID</code>
               requests to this API also return equivalent <code>Link</code> HTTP headers.
           </p>
           <p>
@@ -65,13 +64,13 @@
         <td>
             <p><a href="{{ BASE_URI }}/paper/3?_profile=list">{{ BASE_URI }}/paper/3?_profile=list</a> (HTML)</p>
             <p><a href="{{ BASE_URI }}/paper/3?_profile=list&_mediatype=text/uri-list">{{ BASE_URI }}/paper/3?_profile=list&_mediatype=text/uri-list</a> (text/uri-list)</p>
-            <p><a href="{{ BASE_URI }}/paper/3?_profile=list&_mediatype=application/json">{{ BASE_URI }}/paper/3?_profile=list&_mediatype=application/json</a> (JSON)</p>
+            <p><a href="{{ BASE_URI }}/paper/3?_profile=list&_mediatype=https://w3id.org/mediatype/application/json">{{ BASE_URI }}/paper/3?_profile=list&_mediatype=https://w3id.org/mediatype/application/json</a> (JSON)</p>
         </td>
         <td></td>
       </tr>
       <tr>
         <td>List profiles token/URI mapping for a <em>Resource</em></td>
-        <td><code>?_profile=tokens</code></td>
+        <td><code>RESOURCE_URI?_profile=tokens</code></td>
         <td>-</td>
         <td>
             <p>Returns a list of token/URI mappings for <em>Profile</em>s available for this <em>Resource</em>.</p>
@@ -85,9 +84,9 @@
       <tr>
           <td>Retrieve a <em>Resource</em> according to a <em>Profile</em></td>
         <td>
-            <p><code>?_profile=PROFILE_IDS</code></p>
-            <p>PROFILE_IDS := PROFILE_ID[,PROFILE_ID]*</p>
-            <p>PROFILE_ID := PROFILE_URI | PROFILE_TOKEN</p>
+            <p><code>RESOURCE_URI?_profile=PROFILE_IDS</code></p>
+            <p><code>PROFILE_IDS := PROFILE_ID[,PROFILE_ID]*</code></p>
+            <p><code>PROFILE_ID := PROFILE_URI | PROFILE_TOKEN</code></p>
         </td>
         <td><code>Accept-Profile: PROFILE_URIS</code></td>
         <td>
@@ -105,8 +104,8 @@
       <tr>
         <td>List <em>Media Types</em> available for a <em>Resource</em> according to a <em>Profile</em></td>
         <td>
-            <p><code>?_profile=PROFILE_ID&_mediatype=list[,MEDIATYPE_ID]</code></p>
-            <p>MEDIATYPE_ID := MEDIATYPE_URI | MEDIATYPE_TOKEN</p>
+            <p><code>RESOURCE_URI?_profile=PROFILE_ID&_mediatype=list[,MEDIATYPE_ID]</code></p>
+            <p><code>MEDIATYPE_ID := MEDIATYPE_URI | MEDIATYPE_TOKEN</code></p>
         </td>
         <td>-</td>
         <td>
@@ -123,8 +122,8 @@
       <tr>
         <td>List <em>Media Types</em> token/URI mapping for a <em>Resource</em>'s a <em>Profile</em></td>
         <td>
-            <p><code>?_profile=PROFILE_ID&_mediatype=tokens[,MEDIATYPE_ID]</code></p>
-            <p>MEDIATYPE_ID := MEDIATYPE_URI | MEDIATYPE_TOKEN</p>
+            <p><code>RESOURCE_URI?_profile=PROFILE_ID&_mediatype=tokens[,MEDIATYPE_ID]</code></p>
+            <p><code>MEDIATYPE_ID := MEDIATYPE_URI | MEDIATYPE_TOKEN</code></p>
         </td>
         <td>-</td>
         <td>
@@ -139,14 +138,20 @@
       </tr>
       <tr>
         <td>
-            Get a <em>Resource</em> according to a <em>Profile</em> and the first of an array of <em>Media Type</em>.
+            Get a <em>Resource</em> according to a <em>Profile</em> and a <em>Media Type</em>.
         </td>
         <td>
-            <p><code>?_profile=PROFILE_ID&_mediatype=MEDIATYPE_IDS</code></p>
-            <p>MEDIATYPE_IDS := MEDIATYPE_ID[,MEDIATYPE_ID]*</p>
-            <p>MEDIATYPE_ID := MEDIATYPE_URI | MEDIATYPE_TOKEN</p>
+            <p><code>RESOURCE_URI?_profile=PROFILE_IDS&_mediatype=MEDIATYPE_IDS</code></p>
+            <p><code>MEDIATYPE_IDS := MEDIATYPE_ID[,MEDIATYPE_ID]*</code></p>
+            <p><code>MEDIATYPE_ID := MEDIATYPE_URI | MEDIATYPE_TOKEN</code></p>
         </td>
-        <td>-</td>
+        <td>
+            <p><code>
+                GET RESOURCE_URI<br />
+                Accept-Profile: PROFILE_IDS_Q<br />
+                Accept: MEDIATYPE_IDS_Q
+            </code></p>
+        </td>
         <td>
             <p>Returns a single representation of a <em>Resource</em> according to a specified <em>Profile</em> and a
               specified <em>Media Type</em></p>
@@ -158,24 +163,23 @@
         </td>
       </tr>
     </table>
-    <h3>Not implemented yet</h3>
-    <ul>
-        <li>requests for Media Types of preference order <code>_mediatype=mediatype_1,mediatype_2...</code></li>
-    </ul>
-    <h2>Feedback</h2>
-    <p>The code, data &amp text for this API is online in a code repository at:</p>
-    <ul>
-      <li><a href="https://github.com/CSIRO-enviro-informatics/profile-conneg-qsa-realisation">https://github.com/CSIRO-enviro-informatics/profile-conneg-qsa-realisation</a></li>
-    </ul>
-    <p>Please use the <a href="https://github.com/CSIRO-enviro-informatics/profile-conneg-qsa-realisation/issues">Issue Tracker</a> associated with that API to make any comments or suggestions for it or the Profile Negotiation methods it's showcasing.</p>
-    <p>For all other enquiries:</p>
-    <p>
-        <em>Lead Developer</em><br />
-        <strong>Nicholas Car</strong><br />
-        <em>Senior Experimental Scientist</em><br />
-        CSIRO Land &amp; Water, Environmental Informatics Group<br />
-        Brisbane, Queensland, Australia<br />
-        <a href="mailto:nicholas.car@csiro.au">nicholas.car@csiro.au</a>
-    </p>
+{% filter markdown %}
+## Feedback
+The code, data &amp text for this API is online in a code repository at:
+
+* <https://github.com/CSIRO-enviro-informatics/profile-conneg-qsa-realisation>
+
+Please use the [Issue Tracker](https://github.com/CSIRO-enviro-informatics/profile-conneg-qsa-realisation/issues) associated with that API to make any comments or suggestions for it or the Profile Negotiation methods it's showcasing.
+
+For all other enquiries:
+
+**Nicholas Car**<br />
+*Lead Developer*<br />
+*Senior Experimental Scientist*<br />
+CSIRO Land & Water, Environmental Informatics Group<br />
+Brisbane, Queensland, Australia<br />
+<nicholas.car@csiro.au>
+
+{% endfilter %}
   </body>
 </html>

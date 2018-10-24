@@ -33,6 +33,11 @@ def validate_qsas():
             raise QueryStringArgumentError()
 
 
+def is_preferred_mediatype(request, mediatype_id):
+    return request.accept_mimetypes.best_match(['application/json', 'text/uri-list', 'text/html']) == mediatype_id \
+           or request.values.get('_mediatype') == mediatype_id
+
+
 @app.route('/catalogue')
 @app.route('/paper/<string:id>')
 @app.route('/license/<string:id>')
@@ -60,28 +65,18 @@ def resource(id=None):
     else:
         mediatype_ids = ['']
 
-    # 2. Make Link headers
-    # regardless of the method/QSA, get the profiles for Link headers
-    profiles = metadata.list_profiles_for_resource(request.base_url, return_only_uris=True)
-    headers = {}
-    if profiles[0] is not None:
-        links = ''
-        for profile in profiles:
-            links += '<{}>; rel="profile",'.format(profile)
-        links = links[:-1]
-        headers['Link'] = links
-
     # 3. Handle list requests
     if profile_ids[0] == 'list':
+        profiles = metadata.list_profiles_for_resource(request.base_url, return_only_uris=True)
+
         # this request can only adhere to this profile
         headers = {'Content-Profile': '{}'.format('http://www.w3.org/ns/prof/')}  # TODO: address this meta profile
         # either return a text/uri-list, application/json or text/html
-        if request.accept_mimetypes.best_match(['application/json', 'text/uri-list', 'text/html']) == 'text/uri-list' \
-                or request.values.get('_mediatype') == 'text/uri-list':
+        if is_preferred_mediatype(request, 'text/uri-list') \
+                or is_preferred_mediatype(request, 'https://w3id.org/mediatype/text/uri-list'):
             return Response('\n'.join(profiles), mimetype='text/uri-list', headers=headers)
-        elif request.accept_mimetypes.best_match(
-                ['application/json', 'text/uri-list', 'text/html']) == 'application/json' \
-                or request.values.get('_mediatype') == 'application/json':
+        elif is_preferred_mediatype(request, 'application/json') \
+                or is_preferred_mediatype(request, 'https://w3id.org/mediatype/application/json'):
             return Response(json.dumps(profiles), headers=headers)
         else:
             return render_template('profile_list.html', profiles=profiles, headers=headers)
@@ -92,8 +87,8 @@ def resource(id=None):
         mapping = metadata.list_profiles_tokens_uris_mappings_for_resource(request.base_url)
 
         # either return application/json or text/html
-        if request.accept_mimetypes.best_match(['application/json', 'text/html']) == 'application/json' \
-                or request.values.get('_mediatype') == 'application/json':
+        if is_preferred_mediatype(request, 'application/json') \
+                or is_preferred_mediatype(request, 'https://w3id.org/mediatype/application/json'):
             return Response(json.dumps(mapping), headers=headers)
         else:
             return render_template('profile_mapping_list.html', mapping=mapping, headers=headers)
@@ -146,26 +141,11 @@ def resource(id=None):
                 return render_template('mediatype_mapping_list.html', profile=mediatype_metadata[0], mapping=mapping)
     # 5. Handle direct resource/profile/Media Type requests
     else:
-        mediatype_metadata = metadata.get_mediatype_for_profile(
-            request.base_url,
-            profile_ids=profile_ids,
-            mediatype_ids=mediatype_ids
-        )
-
-        # preserve the profile_id
-        if mediatype_metadata[0] is not None:
-            headers['Content-Profile'] = '{}'.format(mediatype_metadata[0])
-
-        # get the content for this resource/profile/mediatype from the relevant file
-        with open(os.path.join(APP_DIR, 'data', mediatype_metadata[1].get('file')), 'r', encoding="utf-8") as f:
-            response_content = f.read().replace('{{ BASE_URI }}', metadata.BASE_URI)
-
-        return Response(
-            response_content,
-            mimetype=mediatype_metadata[1].get('token'),
-            headers=headers
-        )
+        return metadata.get_response(request, profile_ids=profile_ids, mediatype_ids=mediatype_ids)
 
 
 if __name__ == '__main__':
-   app.run(debug=True)
+    from flaskext.markdown import Markdown
+
+    Markdown(app)
+    app.run(debug=True)

@@ -1,7 +1,10 @@
+import os
 import pytest
 import pprint
+from flask import Response
 
 
+APP_DIR = os.path.dirname(os.path.realpath(__file__))
 BASE_URI = 'http://localhost:5000'
 METADATA = {
     'research_papers': [
@@ -170,6 +173,28 @@ METADATA = {
                             'uri': 'https://w3id.org/mediatype/text/html',
                             'token': 'text/html',
                             'default': True,
+                            'file': 'catalogue-reg.html'
+                        },
+                        {
+                            'uri': 'https://w3id.org/mediatype/text/turtle',
+                            'token': 'text/turtle',
+                            'file': 'catalogue-reg.ttl'
+                        },
+                        {
+                            'uri': 'https://w3id.org/mediatype/application/ld+json',
+                            'token': 'application/ld+json',
+                            'file': 'catalogue-reg.json'
+                        },
+                    ]
+                },
+                {
+                    'uri': 'http://www.w3.org/ns/dcat#',
+                    'token': 'dcat',
+                    'mediatypes': [
+                        {
+                            'uri': 'https://w3id.org/mediatype/text/html',
+                            'token': 'text/html',
+                            'default': True,
                             'file': 'catalogue-dcat.html'
                         },
                         {
@@ -181,28 +206,6 @@ METADATA = {
                             'uri': 'https://w3id.org/mediatype/application/ld+json',
                             'token': 'application/ld+json',
                             'file': 'catalogue-dcat.json'
-                        },
-                    ]
-                },
-                {
-                    'uri': 'http://example.org/ns/ausreg',
-                    'token': 'ausreg',
-                    'mediatypes': [
-                        {
-                            'uri': 'https://w3id.org/mediatype/text/html',
-                            'token': 'text/html',
-                            'default': True,
-                            'file': 'catalogue-reg.html'
-                        },
-                        {
-                            'uri': 'https://w3id.org/mediatype/text/turtle',
-                            'token': 'text/turtle',
-                            'file': 'catalogue-reg.ttl'
-                        },
-                        {
-                            'uri': 'https://w3id.org/mediatype/application/ld+json',
-                            'token': 'application/ld+json',
-                            'file': 'catalogue-auorg.json'
                         },
                     ]
                 }
@@ -576,7 +579,7 @@ def test_get_profile_for_resource():
 
 
 def list_mediatypes_for_resource_profile(resource_uri, profile_ids=None, return_only_uris=False):
-    mediatypes = get_profile_for_resource(resource_uri, profile_ids).get('mediatypes')
+    mediatypes = get_profile_for_resource(resource_uri, profile_ids=profile_ids).get('mediatypes')
 
     if return_only_uris:
         return [x.get('uri') for x in mediatypes]
@@ -670,19 +673,21 @@ def test_list_mediatypes_tokens_uris_mappings_for_resource():
 
 
 def get_mediatype_for_profile(resource_uri, profile_ids=None, mediatype_ids=None):
-    profile = get_profile_for_resource(resource_uri, profile_ids)
+    # get profile
+    profile = get_profile_for_resource(resource_uri, profile_ids=profile_ids)
 
-    # even if the client never asked for one, indicate the profile returned
-    profile_ids = [profile.get('uri')]
-
+    # get list of media types for this resource profile
+    mediatypes = profile.get('mediatypes')
+    mediatype = None
     if mediatype_ids is None:  # just return the default
-        mediatype = [x for x in profile['mediatypes'] if x.get('default')]
+        mediatype = [x for x in mediatypes if x.get('default')][0]
     else:
+        # try to match each mediatype (URI or token) in preference order, break when we have a match
         for mediatype_id in mediatype_ids:
             if mediatype_id.startswith('http'):
-                mediatype = [x for x in profile['mediatypes'] if x.get('uri') == mediatype_id.replace(' ', '+')]
+                mediatype = [x for x in mediatypes if x.get('uri') == mediatype_id.replace(' ', '+')]
             else:
-                mediatype = [x for x in profile['mediatypes'] if x.get('token') == mediatype_id.replace(' ', '+')]
+                mediatype = [x for x in mediatypes if x.get('token') == mediatype_id.replace(' ', '+')]
 
             if len(mediatype) > 0:
                 break
@@ -690,9 +695,9 @@ def get_mediatype_for_profile(resource_uri, profile_ids=None, mediatype_ids=None
         # if mediatypes are found
         if len(mediatype) > 0:
             mediatype = mediatype[0]
-        # if not, just use the first one from the list for the profile
+        # if not (loop above completed with still mediatype = [], just use the first one from the list for the profile
         else:
-            mediatype = [x for x in profile['mediatypes'] if x.get('default')]
+            mediatype = [x for x in mediatypes if x.get('default')][0]
 
     return [profile.get('uri'), mediatype]
 
@@ -710,7 +715,63 @@ def test_get_mediatype_for_profile():
     assert expected == got
 
     got = get_mediatype_for_profile(BASE_URI + '/catalogue', mediatype_ids=['application/ld+json'])[1].get('file')
-    assert 'catalogue-dcat.json' == got
+    assert 'catalogue-reg.json' == got
+
+
+def get_response(request, profile_ids=None, mediatype_ids=None, return_file_name_only=False):
+    headers = {}
+
+    profile_uris = list_profiles_for_resource(request.base_url, return_only_uris=True)
+    mt = get_mediatype_for_profile(request.base_url, profile_ids=profile_ids, mediatype_ids=mediatype_ids)
+
+    if return_file_name_only:
+        return mt[1].get('file')
+
+    else:
+        # header Link -> profile
+        if profile_uris is not None:
+            links = ''
+            for profile_uri in profile_uris:
+                links += '<{}>; rel="profile",'.format(profile_uri)
+            links = links[:-1]
+            headers['Link'] = links
+
+        # header Content-Profile
+        if mt is not None:
+            headers['Content-Profile'] = '{}'.format(mt[0])
+
+        # get the content for this resource/profile/mediatype from the relevant file
+        with open(os.path.join(APP_DIR, 'data', mt[1].get('file')), 'r', encoding='utf-8') as f:
+            response_content = f.read().replace('{{ BASE_URI }}', BASE_URI)
+
+        return Response(
+            response_content,
+            mimetype=mt[1].get('token'),
+            headers=headers
+        )
+
+
+class MockRequest:
+    def __init__(self, base_url):
+        self.base_url = base_url
+
+
+def test_get_response():
+    expected = 'paper-1.html'
+    got = get_response(MockRequest(BASE_URI + '/paper/1'), return_file_name_only=True)
+    assert expected == got
+    expected = 'paper-2-dct.html'
+    got = get_response(MockRequest(BASE_URI + '/paper/2'), return_file_name_only=True)
+    assert expected == got
+    expected = 'paper-3-epub.html'
+    got = get_response(MockRequest(BASE_URI + '/paper/3'), return_file_name_only=True)
+    assert expected == got
+    expected = 'license-1-cc.html'
+    got = get_response(MockRequest(BASE_URI + '/license/1'), return_file_name_only=True)
+    assert expected == got
+    expected = 'catalogue-reg.html'
+    got = get_response(MockRequest(BASE_URI + '/catalogue'), return_file_name_only=True)
+    assert expected == got
 
 
 def test_all():
@@ -730,6 +791,8 @@ def test_all():
     print('completed test_get_mediatype_for_responce_profile()')
     test_list_mediatypes_tokens_uris_mappings_for_resource()
     print('completed test_list_mediatypes_tokens_uris_mappings_for_resource()')
+    test_get_response()
+    print('completed test_get_response()')
 
 
 if __name__ == '__main__':
