@@ -62,9 +62,13 @@ API function is indicated below.
           </p>
         </td>
         <td>
-            <p><a href="{{ BASE_URI }}/paper/3?_profile=list">{{ BASE_URI }}/paper/3?_profile=list</a> (HTML)</p>
-            <p><a href="{{ BASE_URI }}/paper/3?_profile=list&_mediatype=text/uri-list">{{ BASE_URI }}/paper/3?_profile=list&_mediatype=text/uri-list</a> (text/uri-list)</p>
-            <p><a href="{{ BASE_URI }}/paper/3?_profile=list&_mediatype=https://w3id.org/mediatype/application/json">{{ BASE_URI }}/paper/3?_profile=list&_mediatype=https://w3id.org/mediatype/application/json</a> (JSON)</p>
+{% filter markdown %}
+<{{ BASE_URI }}/paper/3?_profile=list> (HTML)
+
+<{{ BASE_URI }}/paper/3?_profile=list&_mediatype=text/uri-list> (text/uri-list)
+
+<{{ BASE_URI }}/paper/3?_profile=list&_mediatype=https://w3id.org/mediatype/application/json> (JSON)
+{% endfilter %}
         </td>
         <td></td>
       </tr>
@@ -77,8 +81,11 @@ API function is indicated below.
             <p>Available Media Types: <code>application/json</code>, <code>text/html</code></p>
         </td>
         <td>
-            <p><a href="{{ BASE_URI }}/paper/3?_profile=tokens">{{ BASE_URI }}/paper/3?_profile=tokens</a> (HTML)</p>
-            <p><a href="{{ BASE_URI }}/paper/3?_profile=tokens&_mediatype=application/json">{{ BASE_URI }}/paper/3?_profile=tokens&_mediatype=application/json</a> (JSON)</p>
+{% filter markdown %}
+<{{ BASE_URI }}/paper/3?_profile=tokens> (HTML)
+
+<{{ BASE_URI }}/paper/3?_profile=tokens&_mediatype=application/json> (JSON)
+{% endfilter %}
         </td>
       </tr>
       <tr>
@@ -95,10 +102,15 @@ API function is indicated below.
             <p>Any combination of URIs or tokens used to identify <em>Profiles</em> can be used.</p>
         </td>
         <td>
-            <p><a href="{{ BASE_URI }}/paper/3?_profile=http://test.linked.data.gov.au/def/CSIRO-ePub-DCAP">{{ BASE_URI }}/paper/3?_profile=http://test.linked.data.gov.au/def/CSIRO-ePub-DCAP</a> (URI)</p>
-            <p><a href="{{ BASE_URI }}/paper/3?_profile=epub">{{ BASE_URI }}/paper/3?_profile=epub</a> (token)</p>
-            <p><a href="{{ BASE_URI }}/paper/3?_profile=abc,def,xyz,dct,epub">{{ BASE_URI }}/paper/3?_profile=abc,def,xyz,dct,epub</a> (multiple tokens)</p>
-            <p><a href="{{ BASE_URI }}/paper/3?_profile=abc,def,xyz,dct,epub">{{ BASE_URI }}/paper/3?_profile=abc,def,xyz,http://purl.org/dc/terms/,epub</a> (multiple tokens &amp; URIs)</p>
+{% filter markdown %}
+<{{ BASE_URI }}/paper/3?_profile=http://test.linked.data.gov.au/def/CSIRO-ePub-DCAP> (URI)
+
+<{{ BASE_URI }}/paper/3?_profile=epub> (token)
+
+<{{ BASE_URI }}/paper/3?_profile=abc,def,xyz,dct,epub> (multiple tokens)
+
+<{{ BASE_URI }}/paper/3?_profile=abc,def,xyz,http://purl.org/dc/terms/,epub> (multiple tokens & URIs)
+{% endfilter %}
         </td>
       </tr>
       <tr>
@@ -114,9 +126,13 @@ API function is indicated below.
             <p>If a particular Media Type response is wanted, as opposed to the HTML default, then this should be specified, via token or URI, after the keyword <code>list</code> separated by a comma.</p>
         </td>
         <td>
-            <p><a href="{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=list">{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=list</a> (HTML)</p>
-            <p><a href="{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=list,text/uri-list">{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=list,text/uri-list</a> (text/uri-list)</p>
-            <p><a href="{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=list,application/json">{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=list,application/json</a> (JSON)</p>
+{% filter markdown %}
+<{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=list> (HTML)
+
+<{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=list,text/uri-list> (text/uri-list)
+
+<{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=list,application/json> (JSON)
+{% endfilter %}
         </td>
       </tr>
       <tr>
@@ -132,8 +148,11 @@ API function is indicated below.
             <p>If a particular Media Type response is wanted, as opposed to the HTML default, then this should be specified, via token or URI, after the keyword <code>tokens</code> separated by a comma.</p>
         </td>
         <td>
-            <p><a href="{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=tokens">{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=tokens</a> (HTML)</p>
-            <p><a href="{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=tokens,application/json">{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=tokens,application/json</a> (JSON)</p>
+{% filter markdown %}
+<{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=tokens> (HTML)
+
+<{{ BASE_URI }}/paper/3?_profile=epub&_mediatype=tokens,application/json> (JSON)
+{% endfilter %}
         </td>
       </tr>
       <tr>

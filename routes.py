@@ -1,5 +1,6 @@
 import os
 from flask import Flask, Blueprint, render_template, request, Response
+from flaskext.markdown import Markdown
 import json
 import metadata
 
@@ -145,7 +146,5 @@ def resource(id=None):
 
 
 if __name__ == '__main__':
-    from flaskext.markdown import Markdown
-
     Markdown(app)
     app.run(debug=True)
